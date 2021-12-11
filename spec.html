@@ -36007,55 +36007,6 @@ THH:mm:ss.sss
             <p>In case-insignificant matches when _EitherUnicode_ is *true*, all characters are implicitly case-folded using the simple mapping provided by the Unicode standard immediately before they are compared. The simple mapping always maps to a single code point, so it does not map, for example, `&szlig;` (U+00DF) to `SS`. It may however map a code point outside the Basic Latin range to a character within, for example, `&#x17f;` (U+017F) to `s`. Such characters are not mapped if _EitherUnicode_ is *false*. This prevents Unicode code points such as U+017F and U+212A from matching regular expressions such as `/[a-z]/i`, but they will match `/[a-z]/ui`.</p>
           </emu-note>
         </emu-clause>
-
-        <emu-clause id="sec-runtime-semantics-maybesimplecasefolding-a" type="abstract operation">
-          <h1>
-            MaybeSimpleCaseFolding (
-              _A_: a CharSet,
-            )
-          </h1>
-          <dl class="header">
-            <dt>description</dt>
-            <dd>It uses the Unicode <a href="https://www.unicode.org/reports/tr44/#Simple_Case_Folding">Simple Case Folding</a> mapping, which maps one code point to one code point, and which is abbreviated <a href="https://www.unicode.org/Public/UCD/latest/ucd/PropertyAliases.txt">scf</a>.</dd>
-          </dl>
-          <emu-alg>
-            1. If _UnicodeSets_ is *false* or _IgnoreCase_ is *false*, return _A_.
-            1. Let _S_ be a copy of _A_.
-            1. For each element _cs_ (a character or sequence of characters) in _A_, do
-              1. Create an empty sequence of characters _t_.
-              1. For each single code point _c_ in _cs_, do
-                1. Append scf(_c_) to _t_.
-              1. If _t_ is different from _cs_, remove _cs_ from _S_ and add _t_ to _S_.
-            1. Return _S_.
-          </emu-alg>
-        </emu-clause>
-        <emu-clause id="sec-runtime-semantics-getallcharacters" type="abstract operation">
-          <h1>
-            GetAllCharacters (
-            )
-          </h1>
-          <dl class="header">
-          </dl>
-          <emu-alg>
-            1. Let _A_ be a new, empty CharSet (“A” for “all characters”).
-            1. If _UnicodeSets_ is *true* and _IgnoreCase_ is *true*, add all Unicode code points _c_ to _A_ that do not have a <a href="https://www.unicode.org/reports/tr44/#Simple_Case_Folding">Simple Case Folding</a> mapping (that is, scf(_c_)=_c_).
-            1. Otherwise, add all characters to _A_.
-            1. Return _A_.
-          </emu-alg>
-        </emu-clause>
-        <emu-clause id="sec-runtime-semantics-codepointcomplement-s" type="abstract operation">
-          <h1>
-            CodePointComplement (
-              _S_: a CharSet,
-            )
-          </h1>
-          <dl class="header">
-          </dl>
-          <emu-alg>
-            1. Let _A_ be the Charset returned by ! GetAllCharacters().
-            1. Return the subtraction of CharSet _A_ minus CharSet _S_.
-          </emu-alg>
-        </emu-clause>
       </emu-clause>
 
       <emu-clause id="sec-compilecharacterclass" type="sdo" oldids="sec-characterclass">
@@ -36133,6 +36084,94 @@ THH:mm:ss.sss
         </emu-note>
         <emu-note>
           <p>A `-` character can be treated literally or it can denote a range. It is treated literally if it is the first or last character of |ClassRanges|, the beginning or end limit of a range specification, or immediately follows a range specification.</p>
+        </emu-note>
+
+        <!-- ClassUnion -->
+        <emu-grammar>ClassUnion :: ClassRange ClassUnion?</emu-grammar>
+        <emu-alg>
+          1. Let _A_ be CompileToCharSet of |ClassRange|.
+          1. If |ClassUnion| is present, then
+            1. Let _B_ be CompileToCharSet of |ClassUnion|.
+            1. Return the union of CharSets _A_ and _B_.
+          1. Return _A_.
+        </emu-alg>
+        <emu-grammar>ClassUnion :: ClassOperand ClassUnion?</emu-grammar>
+        <emu-alg>
+          1. Let _A_ be CompileToCharSet of |ClassOperand|.
+          1. If |ClassUnion| is present, then
+            1. Let _B_ be CompileToCharSet of |ClassUnion|.
+            1. Return the union of CharSets _A_ and _B_.
+          1. Return _A_.
+        </emu-alg>
+
+        <!-- ClassIntersection -->
+        <emu-grammar>ClassIntersection :: ClassOperand `&amp;&amp;` ClassOperand</emu-grammar>
+        <emu-alg>
+          1. Let _A_ be CompileToCharSet of the first |ClassOperand|.
+          1. Let _B_ be CompileToCharSet of the second |ClassOperand|.
+          1. Return the intersection of CharSets _A_ and _B_.
+        </emu-alg>
+        <emu-grammar>ClassIntersection :: ClassIntersection `&amp;&amp;` ClassOperand</emu-grammar>
+        <emu-alg>
+          1. Let _A_ be CompileToCharSet of the |ClassIntersection|.
+          1. Let _B_ be CompileToCharSet of the |ClassOperand|.
+          1. Return the intersection of CharSets _A_ and _B_.
+        </emu-alg>
+
+        <!-- ClassSubtraction -->
+        <emu-grammar>ClassSubtraction :: ClassOperand `--` ClassOperand</emu-grammar>
+        <emu-alg>
+          1. Let _A_ be CompileToCharSet of the first |ClassOperand|.
+          1. Let _B_ be CompileToCharSet of the second |ClassOperand|.
+          1. Return the subtraction of CharSets _A_ and _B_.
+        </emu-alg>
+        <emu-grammar>ClassSubtraction :: ClassSubtraction `--` ClassOperand</emu-grammar>
+        <emu-alg>
+          1. Let _A_ be CompileToCharSet of the |ClassSubtraction|.
+          1. Let _B_ be CompileToCharSet of the |ClassOperand|.
+          1. Return the subtraction of CharSets _A_ and _B_.
+        </emu-alg>
+
+        <!-- ClassOperand -->
+        <emu-grammar>ClassOperand :: ClassCharacter</emu-grammar>
+        <emu-alg>
+          1. Let _A_ be CompileToCharSet of |ClassCharacter|.
+          1. Return ! MaybeSimpleCaseFolding(_A_).
+        </emu-alg>
+        <emu-grammar>ClassOperand :: ClassStrings</emu-grammar>
+        <emu-alg>
+          1. Let _A_ be CompileToCharSet of |ClassStrings|.
+          1. Return ! MaybeSimpleCaseFolding(_A_).
+        </emu-alg>
+        <emu-grammar>ClassOperand :: NestedClass</emu-grammar>
+        <emu-alg>
+          1. Return CompileToCharSet of |NestedClass|.
+        </emu-alg>
+
+        <!-- ClassOperand -->
+        <emu-grammar>NestedClass :: `[` ClassRanges `]`</emu-grammar>
+        <emu-alg>
+          1. Return CompileToCharSet of |ClassRanges|.
+        </emu-alg>
+        <emu-grammar>NestedClass :: `[` `^` ClassRanges `]`</emu-grammar>
+        <emu-alg>
+          1. Let _A_ be CompileToCharSet of |ClassRanges|.
+          1. Return the CharSet containing all characters not in _A_.
+        </emu-alg>
+        <emu-grammar>NestedClass :: `\` CharacterClassEscape</emu-grammar>
+        <emu-alg>
+          1. Return CompileToCharSet of |CharacterClassEscape|.
+        </emu-alg>
+
+        <!-- ClassRange -->
+        <emu-grammar>ClassRange :: ClassCharacter `-` ClassCharacter</emu-grammar>
+        <emu-alg>
+          1. Let _A_ be CompileToCharSet of the first |ClassCharacter|.
+          1. Let _B_ be CompileToCharSet of the second |ClassCharacter|.
+          1. Return ! MaybeSimpleCaseFolding(! CharacterRange(_A, B_)).
+        </emu-alg>
+        <emu-note>
+          <p>The result will often consist of two or more ranges. When UnicodeSets is *true* and IgnoreCase is *true*, then MaybeSimpleCaseFolding([Ā-č]) will include only the odd-numbered code points of that range.</p>
         </emu-note>
 
         <!-- ClassAtom -->
@@ -36222,210 +36261,45 @@ THH:mm:ss.sss
           1. Return ! MaybeSimpleCaseFolding(_A_).
         </emu-alg>
 
-      <emu-clause id="sec-classcontents">
-        <h1>ClassContents</h1>
-        <p>The production <emu-grammar>ClassContents :: ClassUnion</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Return the CharSet that is the result of evaluating |ClassUnion|.
-        </emu-alg>
-        <p>The production <emu-grammar>ClassContents :: ClassIntersection</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Return the CharSet that is the result of evaluating |ClassIntersection|.
-        </emu-alg>
-        <p>The production <emu-grammar>ClassContents :: ClassSubtraction</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Return the CharSet that is the result of evaluating |ClassSubtraction|.
-        </emu-alg>
-      </emu-clause>
-
-      <emu-clause id="sec-classunion">
-        <h1>ClassUnion</h1>
-        <p>The production <emu-grammar>ClassUnion :: ClassRange ClassUnion?</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Evaluate |ClassRange| to obtain a CharSet _A_.
-          1. If |ClassUnion| is present, then
-            1. Evaluate |ClassUnion| to obtain a CharSet _B_.
-            1. Return the union of CharSets _A_ and _B_.
-          1. Return _A_.
-        </emu-alg>
-        <p>The production <emu-grammar>ClassUnion :: ClassOperand ClassUnion?</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Evaluate |ClassOperand| to obtain a CharSet _A_.
-          1. If |ClassUnion| is present, then
-            1. Evaluate |ClassUnion| to obtain a CharSet _B_.
-            1. Return the union of CharSets _A_ and _B_.
-          1. Return _A_.
-        </emu-alg>
-      </emu-clause>
-
-      <emu-clause id="sec-classintersection">
-        <h1>ClassIntersection</h1>
-        <p>The production <emu-grammar>ClassIntersection :: ClassOperand `&amp;&amp;` [lookahead != `&amp;] ClassOperand</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Evaluate the first |ClassOperand| to obtain a CharSet _A_.
-          1. Evaluate the second |ClassOperand| to obtain a CharSet _B_.
-          1. Return the intersection of CharSets _A_ and _B_.
-        </emu-alg>
-        <p>The production <emu-grammar>ClassIntersection :: ClassIntersection `&amp;&amp;` [lookahead != `&amp;] ClassOperand</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Evaluate the |ClassIntersection| to obtain a CharSet _A_.
-          1. Evaluate the |ClassOperand| to obtain a CharSet _B_.
-          1. Return the intersection of CharSets _A_ and _B_.
-        </emu-alg>
-      </emu-clause>
-
-      <emu-clause id="sec-classsubtraction">
-        <h1>ClassSubtraction</h1>
-        <p>The production <emu-grammar>ClassSubtraction :: ClassOperand `--` ClassOperand</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Evaluate the first |ClassOperand| to obtain a CharSet _A_.
-          1. Evaluate the second |ClassOperand| to obtain a CharSet _B_.
-          1. Return the subtraction of CharSet _A_ minus CharSet _B_.
-        </emu-alg>
-        <p>The production <emu-grammar>ClassSubtraction :: ClassSubtraction `--` ClassOperand</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Evaluate the |ClassSubtraction| to obtain a CharSet _A_.
-          1. Evaluate the |ClassOperand| to obtain a CharSet _B_.
-          1. Return the subtraction of CharSet _A_ minus CharSet _B_.
-        </emu-alg>
-      </emu-clause>
-
-      <emu-clause id="sec-classoperand">
-        <h1>ClassOperand</h1>
-        <p>The production <emu-grammar>ClassOperand :: ClassCharacter</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Evaluate the |ClassCharacter| to obtain a CharSet _A_.
-          1. Return ! MaybeSimpleCaseFolding(_A_).
-        </emu-alg>
-        <p>The production <emu-grammar>ClassOperand :: ClassStrings</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Evaluate the |ClassStrings| to obtain a CharSet _A_.
-          1. Return ! MaybeSimpleCaseFolding(_A_).
-        </emu-alg>
-        <p>The production <emu-grammar>ClassOperand :: NestedClass</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Return the CharSet that is the result of evaluating |NestedClass|.
-        </emu-alg>
-      </emu-clause>
-
-      <emu-clause id="sec-nestedclass">
-        <h1>NestedClass</h1>
-        <p>The production <emu-grammar>NestedClass :: `[` [lookahead != `^`] ClassRanges[+UnicodeMode, +UnicodeSetsMode] `]`</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Return the CharSet that is the result of evaluating |ClassRanges|.
-        </emu-alg>
-        <p>The production <emu-grammar>NestedClass :: `[` `^` ClassRanges[+UnicodeMode, +UnicodeSetsMode] `]`</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Let _A_ be the CharSet that is the result of evaluating |ClassRanges|.
-          1. Return the CharSet containing all characters not in _A_.
-        </emu-alg>
-        <p>The production <emu-grammar>NestedClass :: `\` CharacterClassEscape</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Return the CharSet that is the result of evaluating |CharacterClassEscape|.
-        </emu-alg>
-      </emu-clause>
-
-      <emu-clause id="sec-classrange">
-        <h1>ClassRange</h1>
-        <p>The production <emu-grammar>ClassRange :: ClassCharacter `-` ClassCharacter</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Evaluate the first |ClassCharacter| to obtain a CharSet _A_.
-          1. Evaluate the second |ClassCharacter| to obtain a CharSet _B_.
-          1. Return ! MaybeSimpleCaseFolding(! CharacterRange(_A, B_)).
-        </emu-alg>
-        <emu-note>
-          <p>The result will often consist of two or more ranges. When UnicodeSets is *true* and IgnoreCase is *true*, then MaybeSimpleCaseFolding([Ā-č]) will include only the odd-numbered code points of that range.</p>
-        </emu-note>
-      </emu-clause>
-
-      <emu-clause id="sec-classcharacter">
-        <h1>ClassCharacter</h1>
-        <p>The |ClassCharacter| productions evaluate as follows:</p>
+        <!-- ClassCharacter -->
         <emu-grammar>
-          ClassCharacter :: [lookahead &notin; ClassReservedDouble] SourceCharacter but not ClassSyntaxCharacter
+          ClassCharacter :: SourceCharacter but not ClassSyntaxCharacter
 
           ClassCharacter :: `\` CharacterEscape
 
           ClassCharacter :: `\` ClassAllowEscaped
-
         </emu-grammar>
         <emu-alg>
           1. Let _cv_ be the CharacterValue of this |ClassCharacter|.
           1. Let _c_ be the character whose character value is _cv_.
           1. Return the CharSet containing the single character _c_.
         </emu-alg>
-        <p>The production <emu-grammar>ClassCharacter :: `\` `b`</emu-grammar> evaluates as follows:</p>
+        <emu-grammar>ClassCharacter :: `\` `b`</emu-grammar>
         <emu-alg>
           1. Return the CharSet containing the single character U+0008 (BACKSPACE).
         </emu-alg>
-      </emu-clause>
 
-      <emu-clause id="sec-classranges">
-        <h1>ClassRanges</h1>
-        <p>The production <emu-grammar>ClassRanges :: [empty]</emu-grammar> evaluates as follows:</p>
+        <!-- ClassStrings -->
+        <emu-grammar>ClassStrings :: `(` ClassString MoreClassStrings? `)`</emu-grammar>
         <emu-alg>
-          1. Return the empty CharSet.
-        </emu-alg>
-        <p>The production <emu-grammar>ClassRanges :: NonemptyClassRanges</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Return the CharSet that is the result of evaluating |NonemptyClassRanges|.
-        </emu-alg>
-        <p>The production <emu-grammar>ClassRanges :: ClassContents</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Return the CharSet that is the result of evaluating |ClassContents|.
-        </emu-alg>
-      </emu-clause>
-
-      <emu-clause id="sec-classstrings">
-        <h1>ClassStrings</h1>
-        <p>The production <emu-grammar>ClassStrings :: `(` ClassString MoreClassStrings? `)`</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Evaluate |ClassString| to obtain a string _s_.
+          1. Let _s_ be CompileString of |ClassString|.
           1. Let A be the CharSet that contains the one string _s_.
           1. If |MoreClassStrings| is present, then
-            1. Evaluate |MoreClassStrings| to obtain a CharSet _B_.
+            1. Let _B_ be CompileToCharSet of |MoreClassStrings|.
             1. Return the union of CharSets _A_ and _B_.
           1. Return _A_.
         </emu-alg>
-      </emu-clause>
 
-      <emu-clause id="sec-moreclassstrings">
-        <h1>MoreClassStrings</h1>
-        <p>The production <emu-grammar>MoreClassStrings :: `|` ClassString MoreClassStrings?</emu-grammar> evaluates as follows:</p>
+        <!-- MoreClassStrings -->
+        <emu-grammar>MoreClassStrings :: `|` ClassString MoreClassStrings?</emu-grammar>
         <emu-alg>
-          1. Evaluate |ClassString| to obtain a string _s_.
+          1. Let _s_ be CompileString of |ClassString|.
           1. Let _A_ be the CharSet that contains the one string _s_.
           1. If |MoreClassStrings| is present, then
-            1. Evaluate |MoreClassStrings| to obtain a CharSet _B_.
+            1. Let _B_ be CompileToCharSet of |MoreClassStrings|.
             1. Return the union of CharSets _A_ and _B_.
           1. Return _A_.
         </emu-alg>
-      </emu-clause>
-
-      <emu-clause id="sec-classstring">
-        <h1>ClassString</h1>
-        <p>The production <emu-grammar>ClassString :: [empty]</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Return the empty String.
-        </emu-alg>
-        <p>The production <emu-grammar>ClassString :: NonEmptyClassString</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Evaluate |NonEmptyClassString| to obtain a string _s_.
-          1. Return _s_.
-        </emu-alg>
-      </emu-clause>
-
-      <emu-clause id="sec-nonemptyclassstring">
-        <h1>NonEmptyClassString</h1>
-        <p>The production <emu-grammar>NonEmptyClassString :: ClassCharacter NonEmptyClassString?</emu-grammar> evaluates as follows:</p>
-        <emu-alg>
-          1. Evaluate |ClassCharacter| to obtain the single-character string _s1_.
-          1. If |NonEmptyClassString| is present, then
-            1. Evaluate |NonEmptyClassString| to obtain a string _s2_.
-            1. Return the string that is the concatenation of _s1_ with _s2_.
-          1. Return _s1_.
-        </emu-alg>
-      </emu-clause>
 
         <emu-clause id="sec-runtime-semantics-characterrange-abstract-operation" type="abstract operation">
           <h1>
@@ -36444,6 +36318,55 @@ THH:mm:ss.sss
             1. Let _j_ be the character value of character _b_.
             1. Assert: _i_ &le; _j_.
             1. Return the CharSet containing all characters with a character value greater than or equal to _i_ and less than or equal to _j_.
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sec-runtime-semantics-maybesimplecasefolding-a" type="abstract operation">
+          <h1>
+            MaybeSimpleCaseFolding (
+              _A_: a CharSet,
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>It uses the Unicode <a href="https://www.unicode.org/reports/tr44/#Simple_Case_Folding">Simple Case Folding</a> mapping, which maps one code point to one code point, and which is abbreviated <a href="https://www.unicode.org/Public/UCD/latest/ucd/PropertyAliases.txt">scf</a>.</dd>
+          </dl>
+          <emu-alg>
+            1. If _UnicodeSets_ is *false* or _IgnoreCase_ is *false*, return _A_.
+            1. Let _S_ be a copy of _A_.
+            1. For each element _cs_ (a character or sequence of characters) in _A_, do
+              1. Create an empty sequence of characters _t_.
+              1. For each single code point _c_ in _cs_, do
+                1. Append scf(_c_) to _t_.
+              1. If _t_ is different from _cs_, remove _cs_ from _S_ and add _t_ to _S_.
+            1. Return _S_.
+          </emu-alg>
+        </emu-clause>
+        <emu-clause id="sec-runtime-semantics-getallcharacters" type="abstract operation">
+          <h1>
+            GetAllCharacters (
+            )
+          </h1>
+          <dl class="header">
+          </dl>
+          <emu-alg>
+            1. Let _A_ be a new, empty CharSet (“A” for “all characters”).
+            1. If _UnicodeSets_ is *true* and _IgnoreCase_ is *true*, add all Unicode code points _c_ to _A_ that do not have a <a href="https://www.unicode.org/reports/tr44/#Simple_Case_Folding">Simple Case Folding</a> mapping (that is, scf(_c_)=_c_).
+            1. Otherwise, add all characters to _A_.
+            1. Return _A_.
+          </emu-alg>
+        </emu-clause>
+        <emu-clause id="sec-runtime-semantics-codepointcomplement-s" type="abstract operation">
+          <h1>
+            CodePointComplement (
+              _S_: a CharSet,
+            )
+          </h1>
+          <dl class="header">
+          </dl>
+          <emu-alg>
+            1. Let _A_ be the Charset returned by ! GetAllCharacters().
+            1. Return the subtraction of CharSet _A_ minus CharSet _S_.
           </emu-alg>
         </emu-clause>
 
@@ -36497,6 +36420,31 @@ THH:mm:ss.sss
           <emu-import href="table-unicode-general-category-values.html"></emu-import>
           <emu-import href="table-unicode-script-values.html"></emu-import>
         </emu-clause>
+      </emu-clause>
+
+      <emu-clause id="sec-compilestring" type="sdo">
+        <h1>Runtime Semantics: CompileString</h1>
+        <dl class="header">
+          <dt>description</dt>
+          <dd>It returns a string.</dd>
+        </dl>
+
+        <emu-grammar>ClassString :: [empty]</emu-grammar>
+        <emu-alg>
+          1. Return the empty String.
+        </emu-alg>
+        <emu-grammar>ClassString :: NonEmptyClassString</emu-grammar>
+        <emu-alg>
+          1. Return CompileString of |NonEmptyClassString|.
+        </emu-alg>
+        <emu-grammar>NonEmptyClassString :: ClassCharacter NonEmptyClassString?</emu-grammar>
+        <emu-alg>
+          1. Let _s1_ be CompileToCharSet of |ClassCharacter|.
+          1. If |NonEmptyClassString| is present, then
+            1. Let _s2_ be CompileString of |NonEmptyClassString|.
+            1. Return the string that is the concatenation of _s1_ with _s2_.
+          1. Return _s1_.
+        </emu-alg>
       </emu-clause>
     </emu-clause>
 
