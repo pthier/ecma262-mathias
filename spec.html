@@ -35091,7 +35091,7 @@ THH:mm:ss.sss
           1. Let _ch_ be the code point matched by |IdentityEscape|.
           1. Return the code point value of _ch_.
         </emu-alg>
-        <emu-grammar>ClassCharacter :: [lookahead &notin; ClassReservedDouble] SourceCharacter but not ClassSyntaxCharacter</emu-grammar>
+        <emu-grammar>ClassCharacter :: SourceCharacter but not ClassSyntaxCharacter</emu-grammar>
         <emu-alg>
           1. Let _ch_ be the code point matched by |SourceCharacter|.
           1. Return the code point value of _ch_.
@@ -35156,7 +35156,7 @@ THH:mm:ss.sss
         <emu-alg>
           1. Return *false*.
         </emu-alg>
-        <emu-grammar>CharacterClassEscape[UnicodeMode] :: `p{` UnicodePropertyValueExpression `}`</emu-grammar>
+        <emu-grammar>CharacterClassEscape :: `p{` UnicodePropertyValueExpression `}`</emu-grammar>
         <emu-alg>
           1. Return MaybeStrings of the |UnicodePropertyValueExpression|.
         </emu-alg>
@@ -35165,11 +35165,11 @@ THH:mm:ss.sss
           1. If SourceText of |LoneUnicodePropertyNameOrValue| is identical to a List of Unicode code points that is a binary property of strings listed in the &ldquo;Property name&rdquo; column of <emu-xref href="#table-binary-unicode-properties-of-strings"></emu-xref>, return *true*.
           1. Return *false*.
         </emu-alg>
-        <emu-grammar>CharacterClass[UnicodeMode, UnicodeSetsMode] :: `[` [lookahead != `^`] ClassRanges[?UnicodeMode, ?UnicodeSetsMode] `]`</emu-grammar>
+        <emu-grammar>CharacterClass :: `[` ClassRanges `]`</emu-grammar>
         <emu-alg>
           1. Return MaybeStrings of the |ClassRanges|.
         </emu-alg>
-        <emu-grammar>ClassRanges[UnicodeMode, UnicodeSetsMode] :: ClassContents</emu-grammar>
+        <emu-grammar>ClassRanges :: ClassContents</emu-grammar>
         <emu-alg>
           1. Return MaybeStrings of the |ClassContents|.
         </emu-alg>
@@ -35196,13 +35196,13 @@ THH:mm:ss.sss
           1. If |ClassUnion| is present, return MaybeStrings of the |ClassUnion|.
           1. Return *false*.
         </emu-alg>
-        <emu-grammar>ClassIntersection :: ClassOperand `&amp;&amp;` [lookahead != `&amp;`] ClassOperand</emu-grammar>
+        <emu-grammar>ClassIntersection :: ClassOperand `&amp;&amp;` ClassOperand</emu-grammar>
         <emu-alg>
           1. If MaybeStrings of the first |ClassOperand| is *false*, return *false*.
           1. If MaybeStrings of the second |ClassOperand| is *false*, return *false*.
           1. Return *true*.
         </emu-alg>
-        <emu-grammar>ClassIntersection :: ClassIntersection `&amp;&amp;` [lookahead != `&amp;`] ClassOperand</emu-grammar>
+        <emu-grammar>ClassIntersection :: ClassIntersection `&amp;&amp;` ClassOperand</emu-grammar>
         <emu-alg>
           1. If MaybeStrings of the |ClassIntersection| is *false*, return *false*.
           1. If MaybeStrings of the |ClassOperand| is *false*, return *false*.
@@ -35224,11 +35224,11 @@ THH:mm:ss.sss
         <emu-alg>
           1. Return MaybeStrings of the |NestedClass|.
         </emu-alg>
-        <emu-grammar>NestedClass :: `[` [lookahead != `^`] ClassRanges[+UnicodeMode, +UnicodeSetsMode] `]`</emu-grammar>
+        <emu-grammar>NestedClass :: `[` ClassRanges `]`</emu-grammar>
         <emu-alg>
           1. Return MaybeStrings of the |ClassRanges|.
         </emu-alg>
-        <emu-grammar>NestedClass :: `\` CharacterClassEscape[+UnicodeMode]</emu-grammar>
+        <emu-grammar>NestedClass :: `\` CharacterClassEscape</emu-grammar>
         <emu-alg>
           1. Return MaybeStrings of the |CharacterClassEscape|.
         </emu-alg>
