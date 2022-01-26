@@ -36277,7 +36277,7 @@ THH:mm:ss.sss
         <emu-grammar>ClassStrings :: `\q{` ClassString MoreClassStrings? `}`</emu-grammar>
         <emu-alg>
           1. Let _s_ be CompileString of |ClassString|.
-          1. Let A be the CharSet that contains the one string _s_.
+          1. Let _A_ be the CharSet containing the one string _s_.
           1. If |MoreClassStrings| is present, then
             1. Let _B_ be CompileToCharSet of |MoreClassStrings|.
             1. Return the union of CharSets _A_ and _B_.
@@ -36288,7 +36288,7 @@ THH:mm:ss.sss
         <emu-grammar>MoreClassStrings :: `|` ClassString MoreClassStrings?</emu-grammar>
         <emu-alg>
           1. Let _s_ be CompileString of |ClassString|.
-          1. Let _A_ be the CharSet that contains the one string _s_.
+          1. Let _A_ be the CharSet containing the one string _s_.
           1. If |MoreClassStrings| is present, then
             1. Let _B_ be CompileToCharSet of |MoreClassStrings|.
             1. Return the union of CharSets _A_ and _B_.
@@ -36328,11 +36328,13 @@ THH:mm:ss.sss
           <emu-alg>
             1. If _UnicodeSets_ is *false* or _IgnoreCase_ is *false*, return _A_.
             1. Let _S_ be a copy of _A_.
-            1. For each element _cs_ (a character or sequence of characters) in _A_, do
-              1. Create an empty sequence of characters _t_.
+            1. For each CharSetElement _cs_ of _A_, do
+              1. Let _t_ be an empty sequence of characters.
               1. For each single code point _c_ in _cs_, do
                 1. Append scf(_c_) to _t_.
-              1. If _t_ is different from _cs_, remove _cs_ from _S_ and add _t_ to _S_.
+              1. If _t_ is different from _cs_, then
+                1. Remove _cs_ from _S_.
+                1. Add _t_ to _S_.
             1. Return _S_.
           </emu-alg>
         </emu-clause>
@@ -36342,14 +36344,14 @@ THH:mm:ss.sss
           <dl class="header">
           </dl>
           <emu-alg>
-            1. Let _A_ be a new, empty CharSet (“A” for “all characters”).
+            1. Let _A_ be a new empty CharSet.
             1. If _UnicodeSets_ is *true* and _IgnoreCase_ is *true*, add all Unicode code points _c_ to _A_ that do not have a <a href="https://www.unicode.org/reports/tr44/#Simple_Case_Folding">Simple Case Folding</a> mapping (that is, scf(_c_)=_c_).
             1. Otherwise, add all characters to _A_.
             1. Return _A_.
           </emu-alg>
         </emu-clause>
 
-        <emu-clause id="sec-runtime-semantics-codepointcomplement-s" type="abstract operation">
+        <emu-clause id="sec-codepointcomplement" type="abstract operation">
           <h1>
             CodePointComplement (
               _S_: a CharSet,
