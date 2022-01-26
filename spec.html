@@ -34835,13 +34835,13 @@ THH:mm:ss.sss
             It is a Syntax Error if MaybeStrings of the |UnicodePropertyValueExpression| is *true*.
           </li>
         </ul>
-        <emu-grammar>CharacterClass[UnicodeMode, UnicodeSetsMode] :: `[` `^` ClassRanges[?UnicodeMode, ?UnicodeSetsMode] `]`</emu-grammar>
+        <emu-grammar>CharacterClass :: `[` `^` ClassRanges `]`</emu-grammar>
         <ul>
           <li>
             It is a Syntax Error if MaybeStrings of the |ClassRanges| is *true*.
           </li>
         </ul>
-        <emu-grammar>NestedClass :: `[` `^` ClassRanges[+UnicodeMode, +UnicodeSetsMode] `]`</emu-grammar>
+        <emu-grammar>NestedClass :: `[` `^` ClassRanges `]`</emu-grammar>
         <ul>
           <li>
             It is a Syntax Error if MaybeStrings of the |ClassRanges| is *true*.
