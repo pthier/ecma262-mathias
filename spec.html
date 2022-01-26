@@ -36548,8 +36548,9 @@ THH:mm:ss.sss
           <dl class="header">
           </dl>
           <emu-alg>
-            1. If _v_ is *true* and _u_ is *true*, throw a *SyntaxError* exception.
-            1. If _v_ is *true*, then
+            1. If _v_ is *true* and _u_ is *true*, then
+              1. Let _parseResult_ be a List containing one *SyntaxError* object.
+            1. Else if _v_ is *true*, then
               1. Let _parseResult_ be ParseText(_patternText_, |Pattern[+UnicodeMode, +UnicodeSetsMode, +N]|).
             1. Else if _u_ is *true*, then
               1. Let _parseResult_ be ParseText(_patternText_, |Pattern[+UnicodeMode, ~UnicodeSetsMode, +N]|).
