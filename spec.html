@@ -36163,7 +36163,7 @@ THH:mm:ss.sss
         <emu-alg>
           1. Let _A_ be CompileToCharSet of the first |ClassCharacter|.
           1. Let _B_ be CompileToCharSet of the second |ClassCharacter|.
-          1. Return ! MaybeSimpleCaseFolding(! CharacterRange(_A, B_)).
+          1. Return ! MaybeSimpleCaseFolding(! CharacterRange(_A_, _B_)).
         </emu-alg>
         <emu-note>
           <p>The result will often consist of two or more ranges. When UnicodeSets is *true* and IgnoreCase is *true*, then MaybeSimpleCaseFolding([Ā-č]) will include only the odd-numbered code points of that range.</p>
