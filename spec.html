@@ -34832,19 +34832,19 @@ THH:mm:ss.sss
         <emu-grammar>CharacterClassEscape :: `P{` UnicodePropertyValueExpression `}`</emu-grammar>
         <ul>
           <li>
-            It is a Syntax Error if MaybeStrings of the |UnicodePropertyValueExpression| is *true*.
+            It is a Syntax Error if MayContainStrings of the |UnicodePropertyValueExpression| is *true*.
           </li>
         </ul>
         <emu-grammar>CharacterClass :: `[` `^` ClassRanges `]`</emu-grammar>
         <ul>
           <li>
-            It is a Syntax Error if MaybeStrings of the |ClassRanges| is *true*.
+            It is a Syntax Error if MayContainStrings of the |ClassRanges| is *true*.
           </li>
         </ul>
         <emu-grammar>NestedClass :: `[` `^` ClassRanges `]`</emu-grammar>
         <ul>
           <li>
-            It is a Syntax Error if MaybeStrings of the |ClassRanges| is *true*.
+            It is a Syntax Error if MayContainStrings of the |ClassRanges| is *true*.
           </li>
         </ul>
         <emu-grammar>ClassRange :: ClassCharacter `-` ClassCharacter</emu-grammar>
@@ -35121,12 +35121,12 @@ THH:mm:ss.sss
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-static-semantics-maybestrings" type="sdo">
-        <h1>Static Semantics: MaybeStrings</h1>
+      <emu-clause id="sec-static-semantics-maycontainstrings" type="sdo">
+        <h1>Static Semantics: MayContainStrings</h1>
         <dl class="header">
         </dl>
 
-        <p style="background: yellow">(Allow properties of strings according to the Validation Algorithm in tc39/proposal-regexp-set-notation/issues/7. The predicate prefix is “Maybe”, not “Is”, because this is a static check that only relies on syntax and on property metadata, rather than on inspecting whether a property applies to strings and performing the set operations. MaybeStrings can be true even when runtime evaluation yields only single characters.))</p>
+        <p style="background: yellow">(Allow properties of strings according to the Validation Algorithm in tc39/proposal-regexp-set-notation/issues/7. The predicate prefix is “May”, not “Does”, because this is a static check that only relies on syntax and on property metadata, rather than on inspecting whether a property applies to strings and performing the set operations. MayContainStrings can be true even when runtime evaluation yields only single characters.))</p>
         <emu-grammar>
           CharacterClassEscape[UnicodeMode] ::
             `d`
@@ -35158,7 +35158,7 @@ THH:mm:ss.sss
         </emu-alg>
         <emu-grammar>CharacterClassEscape :: `p{` UnicodePropertyValueExpression `}`</emu-grammar>
         <emu-alg>
-          1. Return MaybeStrings of the |UnicodePropertyValueExpression|.
+          1. Return MayContainStrings of the |UnicodePropertyValueExpression|.
         </emu-alg>
         <emu-grammar>UnicodePropertyValueExpression :: LoneUnicodePropertyNameOrValue</emu-grammar>
         <emu-alg>
@@ -35167,81 +35167,81 @@ THH:mm:ss.sss
         </emu-alg>
         <emu-grammar>CharacterClass :: `[` ClassRanges `]`</emu-grammar>
         <emu-alg>
-          1. Return MaybeStrings of the |ClassRanges|.
+          1. Return MayContainStrings of the |ClassRanges|.
         </emu-alg>
         <emu-grammar>ClassRanges :: ClassContents</emu-grammar>
         <emu-alg>
-          1. Return MaybeStrings of the |ClassContents|.
+          1. Return MayContainStrings of the |ClassContents|.
         </emu-alg>
         <emu-grammar>ClassContents :: ClassUnion</emu-grammar>
         <emu-alg>
-          1. Return MaybeStrings of the |ClassContents|.
+          1. Return MayContainStrings of the |ClassContents|.
         </emu-alg>
         <emu-grammar>ClassContents :: ClassIntersection</emu-grammar>
         <emu-alg>
-          1. Return MaybeStrings of the |ClassContents|.
+          1. Return MayContainStrings of the |ClassContents|.
         </emu-alg>
         <emu-grammar>ClassContents :: ClassSubtraction</emu-grammar>
         <emu-alg>
-          1. Return MaybeStrings of the |ClassContents|.
+          1. Return MayContainStrings of the |ClassContents|.
         </emu-alg>
         <emu-grammar>ClassUnion :: ClassRange ClassUnion?</emu-grammar>
         <emu-alg>
-          1. If the |ClassUnion| is present, return MaybeStrings of the |ClassUnion|.
+          1. If the |ClassUnion| is present, return MayContainStrings of the |ClassUnion|.
           1. Return *false*.
         </emu-alg>
         <emu-grammar>ClassUnion :: ClassOperand ClassUnion?</emu-grammar>
         <emu-alg>
-          1. If MaybeStrings of the |ClassOperand| is *true*, return *true*.
-          1. If |ClassUnion| is present, return MaybeStrings of the |ClassUnion|.
+          1. If MayContainStrings of the |ClassOperand| is *true*, return *true*.
+          1. If |ClassUnion| is present, return MayContainStrings of the |ClassUnion|.
           1. Return *false*.
         </emu-alg>
         <emu-grammar>ClassIntersection :: ClassOperand `&amp;&amp;` ClassOperand</emu-grammar>
         <emu-alg>
-          1. If MaybeStrings of the first |ClassOperand| is *false*, return *false*.
-          1. If MaybeStrings of the second |ClassOperand| is *false*, return *false*.
+          1. If MayContainStrings of the first |ClassOperand| is *false*, return *false*.
+          1. If MayContainStrings of the second |ClassOperand| is *false*, return *false*.
           1. Return *true*.
         </emu-alg>
         <emu-grammar>ClassIntersection :: ClassIntersection `&amp;&amp;` ClassOperand</emu-grammar>
         <emu-alg>
-          1. If MaybeStrings of the |ClassIntersection| is *false*, return *false*.
-          1. If MaybeStrings of the |ClassOperand| is *false*, return *false*.
+          1. If MayContainStrings of the |ClassIntersection| is *false*, return *false*.
+          1. If MayContainStrings of the |ClassOperand| is *false*, return *false*.
           1. Return *true*.
         </emu-alg>
         <emu-grammar>ClassSubtraction :: ClassOperand `--` ClassOperand</emu-grammar>
         <emu-alg>
-          1. Return MaybeStrings of the first |ClassOperand|.
+          1. Return MayContainStrings of the first |ClassOperand|.
         </emu-alg>
         <emu-grammar>ClassSubtraction :: ClassSubtraction `--` ClassOperand</emu-grammar>
         <emu-alg>
-          1. Return MaybeStrings of the |ClassSubtraction|.
+          1. Return MayContainStrings of the |ClassSubtraction|.
         </emu-alg>
         <emu-grammar>ClassOperand :: ClassStrings</emu-grammar>
         <emu-alg>
-          1. Return MaybeStrings of the |ClassStrings|.
+          1. Return MayContainStrings of the |ClassStrings|.
         </emu-alg>
         <emu-grammar>ClassOperand :: NestedClass</emu-grammar>
         <emu-alg>
-          1. Return MaybeStrings of the |NestedClass|.
+          1. Return MayContainStrings of the |NestedClass|.
         </emu-alg>
         <emu-grammar>NestedClass :: `[` ClassRanges `]`</emu-grammar>
         <emu-alg>
-          1. Return MaybeStrings of the |ClassRanges|.
+          1. Return MayContainStrings of the |ClassRanges|.
         </emu-alg>
         <emu-grammar>NestedClass :: `\` CharacterClassEscape</emu-grammar>
         <emu-alg>
-          1. Return MaybeStrings of the |CharacterClassEscape|.
+          1. Return MayContainStrings of the |CharacterClassEscape|.
         </emu-alg>
         <emu-grammar>ClassStrings :: `\q{` ClassString MoreClassStrings? `}`</emu-grammar>
         <emu-alg>
-          1. If MaybeStrings of the |ClassString| is *true*, return *true*.
-          1. If |MoreClassStrings| is present, return MaybeStrings of the |MoreClassStrings|.
+          1. If MayContainStrings of the |ClassString| is *true*, return *true*.
+          1. If |MoreClassStrings| is present, return MayContainStrings of the |MoreClassStrings|.
           1. Return *false*.
         </emu-alg>
         <emu-grammar>MoreClassStrings :: `|` ClassString MoreClassStrings?</emu-grammar>
         <emu-alg>
-          1. If MaybeStrings of the |ClassString| is *true*, return *true*.
-          1. If |MoreClassStrings| is present, return MaybeStrings of the |MoreClassStrings|.
+          1. If MayContainStrings of the |ClassString| is *true*, return *true*.
+          1. If |MoreClassStrings| is present, return MayContainStrings of the |MoreClassStrings|.
           1. Return *false*.
         </emu-alg>
         <emu-grammar>ClassString :: [empty]</emu-grammar>
@@ -35250,7 +35250,7 @@ THH:mm:ss.sss
         </emu-alg>
         <emu-grammar>ClassString :: NonEmptyClassString</emu-grammar>
         <emu-alg>
-          1. Return MaybeStrings of the |NonEmptyClassString|.
+          1. Return MayContainStrings of the |NonEmptyClassString|.
         </emu-alg>
         <emu-grammar>NonEmptyClassString :: ClassCharacter NonEmptyClassString?</emu-grammar>
         <emu-alg>
