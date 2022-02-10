@@ -36165,7 +36165,7 @@ THH:mm:ss.sss
             1. Return the CharSet containing all Unicode code points whose character database definition includes the property &ldquo;General_Category&rdquo; with value _s_.
           1. Let _p_ be ! UnicodeMatchProperty(_s_).
           1. Assert: _p_ is a binary Unicode property or binary property alias listed in the &ldquo;Property name and aliases&rdquo; column of <emu-xref href="#table-binary-unicode-properties"></emu-xref>, or a binary Unicode property of strings listed in the &ldquo;Property name&rdquo; column of <emu-xref href="#table-binary-unicode-properties-of-strings"></emu-xref>.
-          1. Let _A_ be the CharSet containing all Unicode code points whose character database definition includes the property _p_ with value &ldquo;True&rdquo;.
+          1. Let _A_ be the CharSet containing all CharSetElements whose character database definition includes the property _p_ with value &ldquo;True&rdquo;.
           1. Return ! MaybeSimpleCaseFolding(_A_).
         </emu-alg>
 
