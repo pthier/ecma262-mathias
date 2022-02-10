@@ -34570,13 +34570,11 @@ THH:mm:ss.sss
         ClassRange ::
           ClassCharacter `-` ClassCharacter
       </emu-grammar>
-      <emu-note>
-        <ul>
-          <li>
-            It is a Syntax Error if the CharacterValue of the first |ClassCharacter| is larger than the CharacterValue of the second |ClassCharacter|.
-          </li>
-        </ul>
-      </emu-note>
+      <ul>
+        <li>
+          It is a Syntax Error if the CharacterValue of the first |ClassCharacter| is larger than the CharacterValue of the second |ClassCharacter|.
+        </li>
+      </ul>
       <emu-grammar type="definition">
         ClassCharacter ::
           [lookahead &notin; ClassReservedDouble] SourceCharacter but not ClassSyntaxCharacter
