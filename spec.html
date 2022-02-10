@@ -36019,7 +36019,7 @@ THH:mm:ss.sss
         <emu-alg>
           1. Let _A_ be CompileToCharSet of |ClassRanges|.
           1. If _UnicodeSets_ is *true*, then
-            1. Return the Record { [[CharSet]]: CodePointComplement(_A_), [[Invert]]: *false* }.
+            1. Return the Record { [[CharSet]]: CharacterComplement(_A_), [[Invert]]: *false* }.
           1. Return the Record { [[CharSet]]: _A_, [[Invert]]: *true* }.
         </emu-alg>
       </emu-clause>
@@ -36205,7 +36205,7 @@ THH:mm:ss.sss
         <emu-grammar>CharacterClassEscape :: `D`</emu-grammar>
         <emu-alg>
           1. Let _S_ be the CharSet returned by <emu-grammar>CharacterClassEscape :: `d`</emu-grammar> .
-          1. Return ! CodePointComplement(_S_).
+          1. Return ! CharacterComplement(_S_).
         </emu-alg>
         <emu-grammar>CharacterClassEscape :: `s`</emu-grammar>
         <emu-alg>
@@ -36214,7 +36214,7 @@ THH:mm:ss.sss
         <emu-grammar>CharacterClassEscape :: `S`</emu-grammar>
         <emu-alg>
           1. Let _S_ be the CharSet returned by <emu-grammar>CharacterClassEscape :: `s`</emu-grammar> .
-          1. Return ! CodePointComplement(_S_).
+          1. Return ! CharacterComplement(_S_).
         </emu-alg>
         <emu-grammar>CharacterClassEscape :: `w`</emu-grammar>
         <emu-alg>
@@ -36223,7 +36223,7 @@ THH:mm:ss.sss
         <emu-grammar>CharacterClassEscape :: `W`</emu-grammar>
         <emu-alg>
           1. Let _S_ be the CharSet returned by <emu-grammar>CharacterClassEscape :: `w`</emu-grammar> .
-          1. Return ! CodePointComplement(_S_).
+          1. Return ! CharacterComplement(_S_).
         </emu-alg>
         <emu-grammar>CharacterClassEscape :: `p{` UnicodePropertyValueExpression `}`</emu-grammar>
         <emu-alg>
@@ -36233,7 +36233,7 @@ THH:mm:ss.sss
         <emu-alg>
           1. Let _S_ be the CharSet returned by CompileToCharSet of |UnicodePropertyValueExpression|.
           1. Assert: _S_ contains only single code points.
-          1. Return ! CodePointComplement(_S_).
+          1. Return ! CharacterComplement(_S_).
         </emu-alg>
         <emu-grammar>UnicodePropertyValueExpression :: UnicodePropertyName `=` UnicodePropertyValue</emu-grammar>
         <emu-alg>
@@ -36351,9 +36351,9 @@ THH:mm:ss.sss
           </emu-alg>
         </emu-clause>
 
-        <emu-clause id="sec-codepointcomplement" type="abstract operation">
+        <emu-clause id="sec-charactercomplement" type="abstract operation">
           <h1>
-            CodePointComplement (
+            CharacterComplement (
               _S_: a CharSet,
             )
           </h1>
