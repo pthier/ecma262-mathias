@@ -34552,6 +34552,15 @@ THH:mm:ss.sss
           ClassOperand `--` ClassOperand
           ClassSubtraction `--` ClassOperand
 
+        ClassRange ::
+          ClassCharacter `-` ClassCharacter
+      </emu-grammar>
+      <ul>
+        <li>
+          It is a Syntax Error if the CharacterValue of the first |ClassCharacter| is larger than the CharacterValue of the second |ClassCharacter|.
+        </li>
+      </ul>
+      <emu-grammar type="definition">
         ClassOperand ::
           ClassCharacter
           ClassStrings
@@ -34567,21 +34576,42 @@ THH:mm:ss.sss
         <p style="background: yellow">[It is less confusing not having to back out of the new syntax, only to dive back in. And if we wanted to use CharacterClass here, we would need to check for differences in static &amp; runtime semantics.]</p>
       </emu-note>
       <emu-grammar type="definition">
-        ClassRange ::
-          ClassCharacter `-` ClassCharacter
-      </emu-grammar>
-      <ul>
-        <li>
-          It is a Syntax Error if the CharacterValue of the first |ClassCharacter| is larger than the CharacterValue of the second |ClassCharacter|.
-        </li>
-      </ul>
-      <emu-grammar type="definition">
+        ClassStrings ::
+          `\q{` ClassString MoreClassStrings? `}`
+
+        MoreClassStrings ::
+          `|` ClassString MoreClassStrings?
+
+        ClassString ::
+          [empty]
+          NonEmptyClassString
+
+        NonEmptyClassString ::
+          ClassCharacter NonEmptyClassString?
+
         ClassCharacter ::
           [lookahead &notin; ClassReservedDouble] SourceCharacter but not ClassSyntaxCharacter
           `\` CharacterEscape[+UnicodeMode]
           `\` ClassAllowEscaped
           `\` `b`
 
+        ClassReservedDouble :: one of
+          `&amp;&amp;` `!!` `##`
+          `$$` `%%` `**`
+          `++` `,,` `..`
+          `::` `;;` `&lt;&lt;`
+          `==` `&gt;&gt;` `??`
+          `@@` `^^` `__`
+          `&grave;&grave;` `~~`
+      </emu-grammar>
+      <emu-note>
+        <ul style="background: yellow">
+          <li>
+            FYI: no need to list `--` `((` `))` `{{` `}}` `//` `||` because those characters can't be used as unescaped ClassCharacters anyway
+          </li>
+        </ul>
+      </emu-note>
+      <emu-grammar type="definition">
         ClassSyntaxCharacter :: one of
           `(` `)` `[` `]` `{` `}` `/` `-` `\` `|`
       </emu-grammar>
@@ -34679,36 +34709,6 @@ THH:mm:ss.sss
                 </ul>
               </li>
             </ul>
-          </li>
-        </ul>
-      </emu-note>
-      <emu-grammar type="definition">
-        ClassStrings ::
-          `\q{` ClassString MoreClassStrings? `}`
-
-        MoreClassStrings ::
-          `|` ClassString MoreClassStrings?
-
-        ClassString ::
-          [empty]
-          NonEmptyClassString
-
-        NonEmptyClassString ::
-          ClassCharacter NonEmptyClassString?
-
-        ClassReservedDouble :: one of
-          `&amp;&amp;` `!!` `##`
-          `$$` `%%` `**`
-          `++` `,,` `..`
-          `::` `;;` `&lt;&lt;`
-          `==` `&gt;&gt;` `??`
-          `@@` `^^` `__`
-          `&grave;&grave;` `~~`
-      </emu-grammar>
-      <emu-note>
-        <ul style="background: yellow">
-          <li>
-            FYI: no need to list `--` `((` `))` `{{` `}}` `//` `||` because those characters can't be used as unescaped ClassCharacters anyway
           </li>
         </ul>
       </emu-note>
@@ -36125,6 +36125,17 @@ THH:mm:ss.sss
           1. Return the CharSet consisting of the elements of _A_ which are not also elements of _B_.
         </emu-alg>
 
+        <!-- ClassRange -->
+        <emu-grammar>ClassRange :: ClassCharacter `-` ClassCharacter</emu-grammar>
+        <emu-alg>
+          1. Let _A_ be CompileToCharSet of the first |ClassCharacter|.
+          1. Let _B_ be CompileToCharSet of the second |ClassCharacter|.
+          1. Return ! MaybeSimpleCaseFolding(! CharacterRange(_A_, _B_)).
+        </emu-alg>
+        <emu-note>
+          <p>The result will often consist of two or more ranges. When UnicodeSets is *true* and IgnoreCase is *true*, then MaybeSimpleCaseFolding([Ā-č]) will include only the odd-numbered code points of that range.</p>
+        </emu-note>
+
         <!-- ClassOperand -->
         <emu-grammar>ClassOperand :: ClassCharacter</emu-grammar>
         <emu-alg>
@@ -36155,17 +36166,6 @@ THH:mm:ss.sss
         <emu-alg>
           1. Return CompileToCharSet of |CharacterClassEscape|.
         </emu-alg>
-
-        <!-- ClassRange -->
-        <emu-grammar>ClassRange :: ClassCharacter `-` ClassCharacter</emu-grammar>
-        <emu-alg>
-          1. Let _A_ be CompileToCharSet of the first |ClassCharacter|.
-          1. Let _B_ be CompileToCharSet of the second |ClassCharacter|.
-          1. Return ! MaybeSimpleCaseFolding(! CharacterRange(_A_, _B_)).
-        </emu-alg>
-        <emu-note>
-          <p>The result will often consist of two or more ranges. When UnicodeSets is *true* and IgnoreCase is *true*, then MaybeSimpleCaseFolding([Ā-č]) will include only the odd-numbered code points of that range.</p>
-        </emu-note>
 
         <!-- ClassAtom -->
         <emu-grammar>ClassAtom :: `-`</emu-grammar>
