@@ -35368,6 +35368,9 @@ THH:mm:ss.sss
           <li oldids="sec-runtime-semantics-wordcharacters-abstract-operation">
             _WordCharacters_ is the mathematical set that is the union of all sixty-three characters in *"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_"* (letters, numbers, and U+005F (LOW LINE) in the Unicode Basic Latin block) and all characters _c_ for which _c_ is not in that set but Canonicalize(_c_) is. _WordCharacters_ cannot contain more than sixty-three characters unless _EitherUnicode_ and _IgnoreCase_ are both *true*.
           </li>
+          <li>
+            _AllCharacters_ is the mathematical set of “all characters” according to the regular expression flags. If _UnicodeSets_ is *true* and _IgnoreCase_ is *true*, then _AllCharacters_ is the set of all Unicode code points _c_ that do not have a <a href="https://www.unicode.org/reports/tr44/#Simple_Case_Folding">Simple Case Folding</a> mapping (that is, scf(_c_)=_c_). Otherwise, _AllCharacters_ is the set of all characters.
+          </li>
         </ul>
         <p>Furthermore, the descriptions below use the following internal data structures:</p>
         <ul>
@@ -35812,7 +35815,7 @@ THH:mm:ss.sss
         </emu-alg>
         <emu-grammar>Atom :: `.`</emu-grammar>
         <emu-alg>
-          1. Let _A_ be ! GetAllCharacters().
+          1. Let _A_ be _AllCharacters_.
           1. If _DotAll_ is not *true*, then
             1. Remove from _A_ all characters corresponding to a code point on the right-hand side of the |LineTerminator| production.
           1. Return ! CharacterSetMatcher(_A_, *false*, _direction_).
@@ -36247,7 +36250,7 @@ THH:mm:ss.sss
         <emu-grammar>NestedClass :: `[` `^` ClassRanges `]`</emu-grammar>
         <emu-alg>
           1. Let _A_ be CompileToCharSet of |ClassRanges|.
-          1. Return the CharSet containing all characters not in _A_.
+          1. Return ! CharacterComplement(_A_).
         </emu-alg>
         <emu-grammar>NestedClass :: `\` CharacterClassEscape</emu-grammar>
         <emu-alg>
@@ -36337,18 +36340,6 @@ THH:mm:ss.sss
           </emu-alg>
         </emu-clause>
 
-        <emu-clause id="sec-runtime-semantics-getallcharacters" type="abstract operation">
-          <h1>GetAllCharacters ( )</h1>
-          <dl class="header">
-          </dl>
-          <emu-alg>
-            1. Let _A_ be a new empty CharSet.
-            1. If _UnicodeSets_ is *true* and _IgnoreCase_ is *true*, add all Unicode code points _c_ to _A_ that do not have a <a href="https://www.unicode.org/reports/tr44/#Simple_Case_Folding">Simple Case Folding</a> mapping (that is, scf(_c_)=_c_).
-            1. Otherwise, add all characters to _A_.
-            1. Return _A_.
-          </emu-alg>
-        </emu-clause>
-
         <emu-clause id="sec-charactercomplement" type="abstract operation">
           <h1>
             CharacterComplement (
@@ -36358,7 +36349,7 @@ THH:mm:ss.sss
           <dl class="header">
           </dl>
           <emu-alg>
-            1. Let _A_ be ! GetAllCharacters().
+            1. Let _A_ be _AllCharacters_.
             1. Return the CharSet consisting of the elements of _A_ which are not also elements of _S_.
           </emu-alg>
         </emu-clause>
