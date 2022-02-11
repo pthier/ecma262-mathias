@@ -35449,12 +35449,7 @@ THH:mm:ss.sss
         <emu-alg>
           1. Let _m1_ be CompileSubpattern of |Alternative| with argument _direction_.
           1. Let _m2_ be CompileSubpattern of |Disjunction| with argument _direction_.
-          1. Return a new Matcher with parameters (_x_, _c_) that captures _m1_ and _m2_ and performs the following steps when called:
-            1. Assert: _x_ is a State.
-            1. Assert: _c_ is a Continuation.
-            1. Let _r_ be _m1_(_x_, _c_).
-            1. If _r_ is not ~failure~, return _r_.
-            1. Return _m2_(_x_, _c_).
+          1. Return ! MatchTwoAlternatives(_m1_, _m2_).
         </emu-alg>
         <emu-note>
           <p>The `|` regular expression operator separates two alternatives. The pattern first tries to match the left |Alternative| (followed by the sequel of the regular expression); if it fails, it tries to match the right |Disjunction| (followed by the sequel of the regular expression). If the left |Alternative|, the right |Disjunction|, and the sequel all have choice points, all choices in the sequel are tried before moving on to the next choice in the left |Alternative|. If choices in the left |Alternative| are exhausted, the right |Disjunction| is tried instead of the left |Alternative|. Any capturing parentheses inside a portion of the pattern skipped by `|` produce *undefined* values instead of Strings. Thus, for example,</p>
@@ -35471,32 +35466,13 @@ THH:mm:ss.sss
         <!-- Alternative -->
         <emu-grammar>Alternative :: [empty]</emu-grammar>
         <emu-alg>
-          1. Return a new Matcher with parameters (_x_, _c_) that captures nothing and performs the following steps when called:
-            1. Assert: _x_ is a State.
-            1. Assert: _c_ is a Continuation.
-            1. Return _c_(_x_).
+          1. Return ! EmptyMatcher().
         </emu-alg>
         <emu-grammar>Alternative :: Alternative Term</emu-grammar>
         <emu-alg>
           1. Let _m1_ be CompileSubpattern of |Alternative| with argument _direction_.
           1. Let _m2_ be CompileSubpattern of |Term| with argument _direction_.
-          1. If _direction_ is ~forward~, then
-            1. Return a new Matcher with parameters (_x_, _c_) that captures _m1_ and _m2_ and performs the following steps when called:
-              1. Assert: _x_ is a State.
-              1. Assert: _c_ is a Continuation.
-              1. Let _d_ be a new Continuation with parameters (_y_) that captures _c_ and _m2_ and performs the following steps when called:
-                1. Assert: _y_ is a State.
-                1. Return _m2_(_y_, _c_).
-              1. Return _m1_(_x_, _d_).
-          1. Else,
-            1. Assert: _direction_ is ~backward~.
-            1. Return a new Matcher with parameters (_x_, _c_) that captures _m1_ and _m2_ and performs the following steps when called:
-              1. Assert: _x_ is a State.
-              1. Assert: _c_ is a Continuation.
-              1. Let _d_ be a new Continuation with parameters (_y_) that captures _c_ and _m1_ and performs the following steps when called:
-                1. Assert: _y_ is a State.
-                1. Return _m1_(_y_, _c_).
-              1. Return _m2_(_x_, _d_).
+          1. Return ! MatchSequence(_m1_, _m2_).
         </emu-alg>
         <emu-note>
           <p>Consecutive |Term|s try to simultaneously match consecutive portions of _Input_. When _direction_ is ~forward~, if the left |Alternative|, the right |Term|, and the sequel of the regular expression all have choice points, all choices in the sequel are tried before moving on to the next choice in the right |Term|, and all choices in the right |Term| are tried before moving on to the next choice in the left |Alternative|. When _direction_ is ~backward~, the evaluation order of |Alternative| and |Term| are reversed.</p>
@@ -35603,6 +35579,69 @@ THH:mm:ss.sss
             <p>which returns the array</p>
             <pre><code class="javascript">["b", ""]</code></pre>
           </emu-note>
+        </emu-clause>
+
+        <emu-clause id="sec-emptymatcher" type="abstract operation">
+          <h1>
+            EmptyMatcher ()
+          </h1>
+          <dl class="header">
+          </dl>
+          <emu-alg>
+            1. Return a new Matcher with parameters (_x_, _c_) that captures nothing and performs the following steps when called:
+              1. Assert: _x_ is a State.
+              1. Assert: _c_ is a Continuation.
+              1. Return _c_(_x_).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sec-matchtwoalternatives" type="abstract operation">
+          <h1>
+            MatchTwoAlternatives (
+              _m1_: a Matcher,
+              _m2_: a Matcher,
+            )
+          </h1>
+          <dl class="header">
+          </dl>
+          <emu-alg>
+            1. Return a new Matcher with parameters (_x_, _c_) that captures _m1_ and _m2_ and performs the following steps when called:
+              1. Assert: _x_ is a State.
+              1. Assert: _c_ is a Continuation.
+              1. Let _r_ be _m1_(_x_, _c_).
+              1. If _r_ is not ~failure~, return _r_.
+              1. Return _m2_(_x_, _c_).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sec-matchsequence" type="abstract operation">
+          <h1>
+            MatchSequence (
+              _m1_: a Matcher,
+              _m2_: a Matcher,
+            )
+          </h1>
+          <dl class="header">
+          </dl>
+          <emu-alg>
+            1. If _direction_ is ~forward~, then
+              1. Return a new Matcher with parameters (_x_, _c_) that captures _m1_ and _m2_ and performs the following steps when called:
+                1. Assert: _x_ is a State.
+                1. Assert: _c_ is a Continuation.
+                1. Let _d_ be a new Continuation with parameters (_y_) that captures _c_ and _m2_ and performs the following steps when called:
+                  1. Assert: _y_ is a State.
+                  1. Return _m2_(_y_, _c_).
+                1. Return _m1_(_x_, _d_).
+            1. Else,
+              1. Assert: _direction_ is ~backward~.
+              1. Return a new Matcher with parameters (_x_, _c_) that captures _m1_ and _m2_ and performs the following steps when called:
+                1. Assert: _x_ is a State.
+                1. Assert: _c_ is a Continuation.
+                1. Let _d_ be a new Continuation with parameters (_y_) that captures _c_ and _m1_ and performs the following steps when called:
+                  1. Assert: _y_ is a State.
+                  1. Return _m1_(_y_, _c_).
+                1. Return _m2_(_x_, _d_).
+          </emu-alg>
         </emu-clause>
       </emu-clause>
 
@@ -35823,13 +35862,25 @@ THH:mm:ss.sss
         <emu-grammar>Atom :: CharacterClass</emu-grammar>
         <emu-alg>
           1. Let _cc_ be CompileCharacterClass of |CharacterClass|.
-          1. If _UnicodeSets_ is *false* or if every element of _cc_.[[CharSet]] consists of a single character, return ! CharacterSetMatcher(_cc_.[[CharSet]], _cc_.[[Invert]], _direction_).
+          1. Let _cs_ be _cc_.[[CharSet]].
+          1. If _UnicodeSets_ is *false* or if every element of _cs_ consists of a single character, return ! CharacterSetMatcher(_cs_, _cc_.[[Invert]], _direction_).
           1. Assert: _cc_.[[Invert]] is *false*.
-          1. Let _D_ be the Disjunction containing:
-            1. an Alternative for each string in _cc_ whose length is greater than 1, with longer strings before shorter strings.
-            1. an Alternative for the CharSet containing all and only the single characters in _cc_ (that is, all and only the strings of length 1).
-            1. an Alternative for the empty String, if it is in _cc_.
-          1. Return CompileSubpattern of _D_ with argument _direction_.
+          1. Let _lm_ be an empty list of Matchers.
+          1. For each string _s_ in _cs_ whose length is greater than 1, iterating in descending order of string length, do
+            1. Let _cs2_ be a one-element CharSet containing the last code point of _s_.
+            1. Let _m2_ be the result of ! CharacterSetMatcher(_cs2_, *false*, _direction_).
+            1. For each code point _c1_ in _s_, iterating backwards from its second-to-last code point, do
+              1. Let _cs1_ be a one-element CharSet containing _c1_.
+              1. Let _m1_ be the result of ! CharacterSetMatcher(_cs1_, *false*, _direction_).
+              1. Let _m2_ be ! MatchSequence(_m1_, _m2_).
+            1. Append _m2_ to _lm_.
+          1. Let _singles_ be the CharSet that contains every element of _cc_.[[CharSet]] which consists of a single character.
+          1. Append to _lm_ the result of ! CharacterSetMatcher(_singles_, *false*, _direction_).
+          1. If _cs_ contains the empty String, append to _lm_ the result of ! EmptyMatcher().
+          1. Let _m2_ be the last Matcher in _lm_.
+          1. For each Matcher _m1_ in _lm_, iterating backwards from its second-to-last element, do
+            1. Let _m2_ be ! MatchTwoAlternatives(_m1_, _m2_).
+          1. Return _m2_.
         </emu-alg>
         <emu-note>
           <p style="background: yellow">TODO: add a NOTE with an example of a character class and its corresponding alternation</p>
