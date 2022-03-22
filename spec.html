@@ -35369,7 +35369,7 @@ THH:mm:ss.sss
             _WordCharacters_ is the mathematical set that is the union of all sixty-three characters in *"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_"* (letters, numbers, and U+005F (LOW LINE) in the Unicode Basic Latin block) and all characters _c_ for which _c_ is not in that set but Canonicalize(_c_) is. _WordCharacters_ cannot contain more than sixty-three characters unless _EitherUnicode_ and _IgnoreCase_ are both *true*.
           </li>
           <li>
-            _AllCharacters_ is the mathematical set of “all characters” according to the regular expression flags. If _UnicodeSets_ is *true* and _IgnoreCase_ is *true*, then _AllCharacters_ is the set of all Unicode code points _c_ that do not have a <a href="https://www.unicode.org/reports/tr44/#Simple_Case_Folding">Simple Case Folding</a> mapping (that is, scf(_c_)=_c_). Otherwise, _AllCharacters_ is the set of all characters.
+            _AllCharacters_ is the mathematical set of “all characters” according to the regular expression flags. If _UnicodeSets_ is *true* and _IgnoreCase_ is *true*, then _AllCharacters_ is the set of all Unicode code points _c_ that do not have a <a href="https://www.unicode.org/reports/tr44/#Simple_Case_Folding">Simple Case Folding</a> mapping (that is, scf(_c_)=_c_). Else, if _EitherUnicode_ is *true*, _AllCharacters_ is the set containing all code point values. Otherwise, _AllCharacters_ is the set containing all code unit values.
           </li>
         </ul>
         <p>Furthermore, the descriptions below use the following internal data structures:</p>
