@@ -36377,13 +36377,12 @@ THH:mm:ss.sss
           </dl>
           <emu-alg>
             1. If _UnicodeSets_ is *false* or _IgnoreCase_ is *false*, return _A_.
-            1. Let _S_ be a copy of _A_.
+            1. Let _S_ be an empty CharSet.
             1. For each CharSetElement _cs_ of _A_, do
               1. Let _t_ be an empty sequence of characters.
               1. For each single code point _c_ in _cs_, do
                 1. Append scf(_c_) to _t_.
-              1. If _t_ is different from _cs_, then
-                1. Remove _cs_ from _S_.
+              1. If _S_ does not contain _t_, then
                 1. Add _t_ to _S_.
             1. Return _S_.
           </emu-alg>
