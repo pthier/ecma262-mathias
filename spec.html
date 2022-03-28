@@ -36311,7 +36311,7 @@ THH:mm:ss.sss
         <emu-grammar>ClassStrings :: `\q{` ClassString MoreClassStrings? `}`</emu-grammar>
         <emu-alg>
           1. Let _s_ be CompileString of |ClassString|.
-          1. Let _A_ be the CharSet containing the one string _s_.
+          1. Let _A_ be the CharSet containing the one sequence of characters _s_.
           1. If |MoreClassStrings| is present, then
             1. Let _B_ be CompileToCharSet of |MoreClassStrings|.
             1. Return the union of CharSets _A_ and _B_.
