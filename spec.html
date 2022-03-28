@@ -34590,7 +34590,7 @@ THH:mm:ss.sss
           ClassSetCharacter NonEmptyClassString?
 
         ClassSetCharacter ::
-          [lookahead &notin; ClassReservedDouble] SourceCharacter but not ClassSyntaxCharacter
+          [lookahead &notin; ClassReservedDouble] SourceCharacter but not ClassSetSyntaxCharacter
           `\` CharacterEscape[+UnicodeMode]
           `\` ClassSetReservedPunctuator
           `\` `b`
@@ -34612,7 +34612,7 @@ THH:mm:ss.sss
         </ul>
       </emu-note>
       <emu-grammar type="definition">
-        ClassSyntaxCharacter :: one of
+        ClassSetSyntaxCharacter :: one of
           `(` `)` `[` `]` `{` `}` `/` `-` `\` `|`
       </emu-grammar>
       <emu-note>
@@ -34621,7 +34621,7 @@ THH:mm:ss.sss
             FYI: Large overlap with SyntaxCharacter.
             <ul>
               <li>
-                Only in ClassSyntaxCharacter: `/` `-`
+                Only in ClassSetSyntaxCharacter: `/` `-`
               </li>
               <li>
                 Only in SyntaxCharacter: `^` `$` `.` `*` `+` `?`
@@ -34727,7 +34727,7 @@ THH:mm:ss.sss
             Without this, one would have to put these characters into [nested classes].
           </li>
           <li>
-            Another option is to put all of these, and SyntaxCharacter, into ClassSyntaxCharacter, requiring them to be escaped. But that seems unfriendly.
+            Another option is to put all of these, and SyntaxCharacter, into ClassSetSyntaxCharacter, requiring them to be escaped. But that seems unfriendly.
           </li>
         </ul>
       </emu-note>
@@ -35089,7 +35089,7 @@ THH:mm:ss.sss
           1. Let _ch_ be the code point matched by |IdentityEscape|.
           1. Return the code point value of _ch_.
         </emu-alg>
-        <emu-grammar>ClassSetCharacter :: SourceCharacter but not ClassSyntaxCharacter</emu-grammar>
+        <emu-grammar>ClassSetCharacter :: SourceCharacter but not ClassSetSyntaxCharacter</emu-grammar>
         <emu-alg>
           1. Let _ch_ be the code point matched by |SourceCharacter|.
           1. Return the code point value of _ch_.
@@ -36331,7 +36331,7 @@ THH:mm:ss.sss
         <!-- ClassSetCharacter -->
         <emu-grammar>
           ClassSetCharacter ::
-            SourceCharacter but not ClassSyntaxCharacter
+            SourceCharacter but not ClassSetSyntaxCharacter
             `\` CharacterEscape
             `\` ClassSetReservedPunctuator
         </emu-grammar>
