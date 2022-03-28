@@ -36459,12 +36459,12 @@ THH:mm:ss.sss
         <h1>Runtime Semantics: CompileString</h1>
         <dl class="header">
           <dt>description</dt>
-          <dd>It returns a string.</dd>
+          <dd>It returns a sequence of characters.</dd>
         </dl>
 
         <emu-grammar>ClassString :: [empty]</emu-grammar>
         <emu-alg>
-          1. Return the empty String.
+          1. Return an empty sequence of characters.
         </emu-alg>
         <emu-grammar>ClassString :: NonEmptyClassString</emu-grammar>
         <emu-alg>
@@ -36473,10 +36473,10 @@ THH:mm:ss.sss
         <emu-grammar>NonEmptyClassString :: ClassCharacter NonEmptyClassString?</emu-grammar>
         <emu-alg>
           1. Let _cs_ be CompileToCharSet of |ClassCharacter|.
-          1. Let _s1_ be the string that is the single element of _cs_.
+          1. Let _s1_ be the sequence of characters that is the single element of _cs_.
           1. If |NonEmptyClassString| is present, then
             1. Let _s2_ be CompileString of |NonEmptyClassString|.
-            1. Return the string that is the concatenation of _s1_ with _s2_.
+            1. Return the string-concatenation of _s1_ and _s2_.
           1. Return _s1_.
         </emu-alg>
       </emu-clause>
