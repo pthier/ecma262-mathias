@@ -34590,12 +34590,12 @@ THH:mm:ss.sss
           ClassSetCharacter NonEmptyClassString?
 
         ClassSetCharacter ::
-          [lookahead &notin; ClassReservedDouble] SourceCharacter but not ClassSetSyntaxCharacter
+          [lookahead &notin; ClassSetReservedOperator] SourceCharacter but not ClassSetSyntaxCharacter
           `\` CharacterEscape[+UnicodeMode]
           `\` ClassSetReservedPunctuator
           `\` `b`
 
-        ClassReservedDouble :: one of
+        ClassSetReservedOperator :: one of
           `&amp;&amp;` `!!` `##`
           `$$` `%%` `**`
           `++` `,,` `..`
@@ -34721,7 +34721,7 @@ THH:mm:ss.sss
       <emu-note>
         <ul style="background: yellow">
           <li>
-            FYI: Allow escaping those characters in ClassReservedDouble that are not otherwise allowed via CharacterClassEscape.
+            FYI: Allow escaping those characters in ClassSetReservedOperator that are not otherwise allowed via CharacterClassEscape.
           </li>
           <li>
             Without this, one would have to put these characters into [nested classes].
