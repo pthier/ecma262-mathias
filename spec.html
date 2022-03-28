@@ -36411,9 +36411,11 @@ THH:mm:ss.sss
           <dl class="header">
           </dl>
           <emu-alg>
-            1. Assert: _p_ is a Unicode <emu-not-ref>property name</emu-not-ref> or property alias listed in the &ldquo;<emu-not-ref>Property name</emu-not-ref> and aliases&rdquo; or &ldquo;<emu-not-ref>Property name</emu-not-ref>&rdquo; column of <emu-xref href="#table-nonbinary-unicode-properties"></emu-xref> or <emu-xref href="#table-binary-unicode-properties"></emu-xref>; or, if _UnicodeSets_ is *true*, of <emu-xref href="#table-binary-unicode-properties-of-strings"></emu-xref>.
-            1. Let _c_ be the canonical <emu-not-ref>property name</emu-not-ref> of _p_ as given in the &ldquo;Canonical <emu-not-ref>property name</emu-not-ref>&rdquo; or &ldquo;<emu-not-ref>Property name</emu-not-ref>&rdquo; column of the corresponding row; or the same as _p_ if _p_ is listed in <emu-xref href="#table-binary-unicode-properties-of-strings"></emu-xref>.
-            1. Return the List of Unicode code points and strings of _c_.
+            1. If _UnicodeSets_ is *true* and _p_ is a Unicode <emu-not-ref>property name</emu-not-ref> listed in the &ldquo;<emu-not-ref>Property name</emu-not-ref>&rdquo; column of <emu-xref href="#table-binary-unicode-properties-of-strings"></emu-xref>, then
+              1. Return the List of Unicode code points _p_.
+            1. Assert: _p_ is a Unicode <emu-not-ref>property name</emu-not-ref> or property alias listed in the &ldquo;<emu-not-ref>Property name</emu-not-ref> and aliases&rdquo; column of <emu-xref href="#table-nonbinary-unicode-properties"></emu-xref> or <emu-xref href="#table-binary-unicode-properties"></emu-xref>.
+            1. Let _c_ be the canonical <emu-not-ref>property name</emu-not-ref> of _p_ as given in the &ldquo;Canonical <emu-not-ref>property name</emu-not-ref>&rdquo; column of the corresponding row.
+            1. Return the List of Unicode code points _c_.
           </emu-alg>
           <p>Implementations must support the Unicode property names and aliases listed in <emu-xref href="#table-nonbinary-unicode-properties"></emu-xref>, <emu-xref href="#table-binary-unicode-properties"></emu-xref>, and <emu-xref href="#table-binary-unicode-properties-of-strings"></emu-xref>. To ensure interoperability, implementations must not support any other property names or aliases.</p>
           <emu-note>
