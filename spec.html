@@ -36310,7 +36310,7 @@ THH:mm:ss.sss
         <!-- ClassStrings -->
         <emu-grammar>ClassStrings :: `\q{` ClassString MoreClassStrings? `}`</emu-grammar>
         <emu-alg>
-          1. Let _s_ be CompileString of |ClassString|.
+          1. Let _s_ be CompileClassSetString of |ClassString|.
           1. Let _A_ be the CharSet containing the one sequence of characters _s_.
           1. If |MoreClassStrings| is present, then
             1. Let _B_ be CompileToCharSet of |MoreClassStrings|.
@@ -36321,7 +36321,7 @@ THH:mm:ss.sss
         <!-- MoreClassStrings -->
         <emu-grammar>MoreClassStrings :: `|` ClassString MoreClassStrings?</emu-grammar>
         <emu-alg>
-          1. Let _s_ be CompileString of |ClassString|.
+          1. Let _s_ be CompileClassSetString of |ClassString|.
           1. Let _A_ be the CharSet containing the one string _s_.
           1. If |MoreClassStrings| is present, then
             1. Let _B_ be CompileToCharSet of |MoreClassStrings|.
@@ -36456,8 +36456,8 @@ THH:mm:ss.sss
         </emu-clause>
       </emu-clause>
 
-      <emu-clause id="sec-compilestring" type="sdo">
-        <h1>Runtime Semantics: CompileString</h1>
+      <emu-clause id="sec-compileclasssetstring" type="sdo">
+        <h1>Runtime Semantics: CompileClassSetString</h1>
         <dl class="header">
           <dt>description</dt>
           <dd>It returns a sequence of characters.</dd>
@@ -36469,14 +36469,14 @@ THH:mm:ss.sss
         </emu-alg>
         <emu-grammar>ClassString :: NonEmptyClassString</emu-grammar>
         <emu-alg>
-          1. Return CompileString of |NonEmptyClassString|.
+          1. Return CompileClassSetString of |NonEmptyClassString|.
         </emu-alg>
         <emu-grammar>NonEmptyClassString :: ClassCharacter NonEmptyClassString?</emu-grammar>
         <emu-alg>
           1. Let _cs_ be CompileToCharSet of |ClassCharacter|.
           1. Let _s1_ be the sequence of characters that is the single element of _cs_.
           1. If |NonEmptyClassString| is present, then
-            1. Let _s2_ be CompileString of |NonEmptyClassString|.
+            1. Let _s2_ be CompileClassSetString of |NonEmptyClassString|.
             1. Return the string-concatenation of _s1_ and _s2_.
           1. Return _s1_.
         </emu-alg>
