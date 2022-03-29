@@ -35920,7 +35920,6 @@ THH:mm:ss.sss
           1. Assert: _n_ &le; _NcapturingParens_.
           1. Return ! BackreferenceMatcher(_n_, _direction_).
         </emu-alg>
-        <p style="background: yellow">TODO: Same changes as above for Atom :: CharacterClass. Either copy the steps from there, or create an abstract operation for turning a CharSet into a Matcher.</p>
         <emu-note>
           <p>An escape sequence of the form `\\` followed by a non-zero decimal number _n_ matches the result of the _n_<sup>th</sup> set of capturing parentheses (<emu-xref href="#sec-notation"></emu-xref>). It is an error if the regular expression has fewer than _n_ capturing parentheses. If the regular expression has _n_ or more capturing parentheses but the _n_<sup>th</sup> one is *undefined* because it has not captured anything, then the backreference always succeeds.</p>
         </emu-note>
@@ -35936,6 +35935,7 @@ THH:mm:ss.sss
           1. Let _A_ be CompileToCharSet of |CharacterClassEscape|.
           1. Return ! CharacterSetMatcher(_A_, *false*, _direction_).
         </emu-alg>
+        <p style="background: yellow">TODO: Same changes in AtomEscape :: CharacterClassEscape as above for Atom :: CharacterClass. Either copy the steps from there, or create an abstract operation for turning a CharSet into a Matcher.</p>
         <emu-grammar>AtomEscape :: `k` GroupName</emu-grammar>
         <emu-alg>
           1. Search the enclosing |Pattern| for an instance of a |GroupSpecifier| containing a |RegExpIdentifierName| which has a CapturingGroupName equal to the CapturingGroupName of the |RegExpIdentifierName| contained in |GroupName|.
