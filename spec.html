@@ -34552,17 +34552,17 @@ THH:mm:ss.sss
           ClassSetOperand `--` ClassSetOperand
           ClassSubtraction `--` ClassSetOperand
 
-        ClassRange ::
-          ClassCharacter `-` ClassCharacter
+        ClassSetRange ::
+          ClassSetCharacter `-` ClassSetCharacter
       </emu-grammar>
       <ul>
         <li>
-          It is a Syntax Error if the CharacterValue of the first |ClassCharacter| is larger than the CharacterValue of the second |ClassCharacter|.
+          It is a Syntax Error if the CharacterValue of the first |ClassSetCharacter| is larger than the CharacterValue of the second |ClassSetCharacter|.
         </li>
       </ul>
       <emu-grammar type="definition">
         ClassSetOperand ::
-          ClassCharacter
+          ClassSetCharacter
           ClassStringDisjunction
           NestedClass
 
@@ -34587,15 +34587,15 @@ THH:mm:ss.sss
           NonEmptyClassString
 
         NonEmptyClassString ::
-          ClassCharacter NonEmptyClassString?
+          ClassSetCharacter NonEmptyClassString?
 
-        ClassCharacter ::
-          [lookahead &notin; ClassReservedDouble] SourceCharacter but not ClassSyntaxCharacter
+        ClassSetCharacter ::
+          [lookahead &notin; ClassSetReservedDoublePunctuator] SourceCharacter but not ClassSetSyntaxCharacter
           `\` CharacterEscape[+UnicodeMode]
-          `\` ClassAllowEscaped
+          `\` ClassSetReservedPunctuator
           `\` `b`
 
-        ClassReservedDouble :: one of
+        ClassSetReservedDoublePunctuator :: one of
           `&amp;&amp;` `!!` `##`
           `$$` `%%` `**`
           `++` `,,` `..`
@@ -34612,7 +34612,7 @@ THH:mm:ss.sss
         </ul>
       </emu-note>
       <emu-grammar type="definition">
-        ClassSyntaxCharacter :: one of
+        ClassSetSyntaxCharacter :: one of
           `(` `)` `[` `]` `{` `}` `/` `-` `\` `|`
       </emu-grammar>
       <emu-note>
@@ -34621,7 +34621,7 @@ THH:mm:ss.sss
             FYI: Large overlap with SyntaxCharacter.
             <ul>
               <li>
-                Only in ClassSyntaxCharacter: `/` `-`
+                Only in ClassSetSyntaxCharacter: `/` `-`
               </li>
               <li>
                 Only in SyntaxCharacter: `^` `$` `.` `*` `+` `?`
@@ -34713,7 +34713,7 @@ THH:mm:ss.sss
         </ul>
       </emu-note>
       <emu-grammar type="definition">
-        ClassAllowEscaped :: one of
+        ClassSetReservedPunctuator :: one of
           `&amp;` `-` `!` `#` `%` `,`
           `:` `;` `&lt;` `=` `&gt;` `@`
           `_` `&grave;` `~`
@@ -34721,13 +34721,13 @@ THH:mm:ss.sss
       <emu-note>
         <ul style="background: yellow">
           <li>
-            FYI: Allow escaping those characters in ClassReservedDouble that are not otherwise allowed via CharacterClassEscape.
+            FYI: Allow escaping those characters in ClassSetReservedDoublePunctuator that are not otherwise allowed via CharacterClassEscape.
           </li>
           <li>
             Without this, one would have to put these characters into [nested classes].
           </li>
           <li>
-            Another option is to put all of these, and SyntaxCharacter, into ClassSyntaxCharacter, requiring them to be escaped. But that seems unfriendly.
+            Another option is to put all of these, and SyntaxCharacter, into ClassSetSyntaxCharacter, requiring them to be escaped. But that seems unfriendly.
           </li>
         </ul>
       </emu-note>
@@ -34845,10 +34845,10 @@ THH:mm:ss.sss
             It is a Syntax Error if MayContainStrings of the |ClassContents| is *true*.
           </li>
         </ul>
-        <emu-grammar>ClassRange :: ClassCharacter `-` ClassCharacter</emu-grammar>
+        <emu-grammar>ClassSetRange :: ClassSetCharacter `-` ClassSetCharacter</emu-grammar>
         <ul>
           <li>
-            It is a Syntax Error if the CharacterValue of the first |ClassCharacter| is larger than the CharacterValue of the second |ClassCharacter|.
+            It is a Syntax Error if the CharacterValue of the first |ClassSetCharacter| is larger than the CharacterValue of the second |ClassSetCharacter|.
           </li>
         </ul>
       </emu-clause>
@@ -35089,17 +35089,17 @@ THH:mm:ss.sss
           1. Let _ch_ be the code point matched by |IdentityEscape|.
           1. Return the code point value of _ch_.
         </emu-alg>
-        <emu-grammar>ClassCharacter :: SourceCharacter but not ClassSyntaxCharacter</emu-grammar>
+        <emu-grammar>ClassSetCharacter :: SourceCharacter but not ClassSetSyntaxCharacter</emu-grammar>
         <emu-alg>
           1. Let _ch_ be the code point matched by |SourceCharacter|.
           1. Return the code point value of _ch_.
         </emu-alg>
-        <emu-grammar>ClassCharacter :: `\` ClassAllowEscaped</emu-grammar>
+        <emu-grammar>ClassSetCharacter :: `\` ClassSetReservedPunctuator</emu-grammar>
         <emu-alg>
-          1. Let _ch_ be the code point matched by |ClassAllowEscaped|.
+          1. Let _ch_ be the code point matched by |ClassSetReservedPunctuator|.
           1. Return the code point value of _ch_.
         </emu-alg>
-        <emu-grammar>ClassCharacter :: `\` `b`</emu-grammar>
+        <emu-grammar>ClassSetCharacter :: `\` `b`</emu-grammar>
         <emu-alg>
           1. Return the code point value of U+0008 (BACKSPACE).
         </emu-alg>
@@ -35149,7 +35149,7 @@ THH:mm:ss.sss
             NonemptyClassRanges[?UnicodeMode]
 
           ClassSetOperand ::
-            ClassCharacter
+            ClassSetCharacter
         </emu-grammar>
         <emu-alg>
           1. Return *false*.
@@ -35183,7 +35183,7 @@ THH:mm:ss.sss
         <emu-alg>
           1. Return MayContainStrings of the |ClassSubtraction|.
         </emu-alg>
-        <emu-grammar>ClassUnion :: ClassRange ClassUnion?</emu-grammar>
+        <emu-grammar>ClassUnion :: ClassSetRange ClassUnion?</emu-grammar>
         <emu-alg>
           1. If the |ClassUnion| is present, return MayContainStrings of the |ClassUnion|.
           1. Return *false*.
@@ -35250,7 +35250,7 @@ THH:mm:ss.sss
         <emu-alg>
           1. Return MayContainStrings of the |NonEmptyClassString|.
         </emu-alg>
-        <emu-grammar>NonEmptyClassString :: ClassCharacter NonEmptyClassString?</emu-grammar>
+        <emu-grammar>NonEmptyClassString :: ClassSetCharacter NonEmptyClassString?</emu-grammar>
         <emu-alg>
           1. If |NonEmptyClassString| is present, return *true*.
           1. Return *false*.
@@ -36220,9 +36220,9 @@ THH:mm:ss.sss
         </emu-alg>
 
         <!-- ClassUnion -->
-        <emu-grammar>ClassUnion :: ClassRange ClassUnion?</emu-grammar>
+        <emu-grammar>ClassUnion :: ClassSetRange ClassUnion?</emu-grammar>
         <emu-alg>
-          1. Let _A_ be CompileToCharSet of |ClassRange|.
+          1. Let _A_ be CompileToCharSet of |ClassSetRange|.
           1. If |ClassUnion| is present, then
             1. Let _B_ be CompileToCharSet of |ClassUnion|.
             1. Return the union of CharSets _A_ and _B_.
@@ -36265,11 +36265,11 @@ THH:mm:ss.sss
           1. Return the CharSet consisting of the elements of _A_ which are not also elements of _B_.
         </emu-alg>
 
-        <!-- ClassRange -->
-        <emu-grammar>ClassRange :: ClassCharacter `-` ClassCharacter</emu-grammar>
+        <!-- ClassSetRange -->
+        <emu-grammar>ClassSetRange :: ClassSetCharacter `-` ClassSetCharacter</emu-grammar>
         <emu-alg>
-          1. Let _A_ be CompileToCharSet of the first |ClassCharacter|.
-          1. Let _B_ be CompileToCharSet of the second |ClassCharacter|.
+          1. Let _A_ be CompileToCharSet of the first |ClassSetCharacter|.
+          1. Let _B_ be CompileToCharSet of the second |ClassSetCharacter|.
           1. Return ! MaybeSimpleCaseFolding(! CharacterRange(_A_, _B_)).
         </emu-alg>
         <emu-note>
@@ -36277,9 +36277,9 @@ THH:mm:ss.sss
         </emu-note>
 
         <!-- ClassSetOperand -->
-        <emu-grammar>ClassSetOperand :: ClassCharacter</emu-grammar>
+        <emu-grammar>ClassSetOperand :: ClassSetCharacter</emu-grammar>
         <emu-alg>
-          1. Let _A_ be CompileToCharSet of |ClassCharacter|.
+          1. Let _A_ be CompileToCharSet of |ClassSetCharacter|.
           1. Return ! MaybeSimpleCaseFolding(_A_).
         </emu-alg>
         <emu-grammar>ClassSetOperand :: ClassStringDisjunction</emu-grammar>
@@ -36329,19 +36329,19 @@ THH:mm:ss.sss
           1. Return _A_.
         </emu-alg>
 
-        <!-- ClassCharacter -->
+        <!-- ClassSetCharacter -->
         <emu-grammar>
-          ClassCharacter ::
-            SourceCharacter but not ClassSyntaxCharacter
+          ClassSetCharacter ::
+            SourceCharacter but not ClassSetSyntaxCharacter
             `\` CharacterEscape
-            `\` ClassAllowEscaped
+            `\` ClassSetReservedPunctuator
         </emu-grammar>
         <emu-alg>
-          1. Let _cv_ be the CharacterValue of this |ClassCharacter|.
+          1. Let _cv_ be the CharacterValue of this |ClassSetCharacter|.
           1. Let _c_ be the character whose character value is _cv_.
           1. Return the CharSet containing the single character _c_.
         </emu-alg>
-        <emu-grammar>ClassCharacter :: `\` `b`</emu-grammar>
+        <emu-grammar>ClassSetCharacter :: `\` `b`</emu-grammar>
         <emu-alg>
           1. Return the CharSet containing the single character U+0008 (BACKSPACE).
         </emu-alg>
@@ -36471,9 +36471,9 @@ THH:mm:ss.sss
         <emu-alg>
           1. Return CompileClassSetString of |NonEmptyClassString|.
         </emu-alg>
-        <emu-grammar>NonEmptyClassString :: ClassCharacter NonEmptyClassString?</emu-grammar>
+        <emu-grammar>NonEmptyClassString :: ClassSetCharacter NonEmptyClassString?</emu-grammar>
         <emu-alg>
-          1. Let _cs_ be CompileToCharSet of |ClassCharacter|.
+          1. Let _cs_ be CompileToCharSet of |ClassSetCharacter|.
           1. Let _s1_ be the sequence of characters that is the single element of _cs_.
           1. If |NonEmptyClassString| is present, then
             1. Let _s2_ be CompileClassSetString of |NonEmptyClassString|.
