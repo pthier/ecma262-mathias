@@ -34553,16 +34553,16 @@ THH:mm:ss.sss
           ClassSubtraction `--` ClassSetOperand
 
         ClassSetRange ::
-          ClassCharacter `-` ClassCharacter
+          ClassSetCharacter `-` ClassSetCharacter
       </emu-grammar>
       <ul>
         <li>
-          It is a Syntax Error if the CharacterValue of the first |ClassCharacter| is larger than the CharacterValue of the second |ClassCharacter|.
+          It is a Syntax Error if the CharacterValue of the first |ClassSetCharacter| is larger than the CharacterValue of the second |ClassSetCharacter|.
         </li>
       </ul>
       <emu-grammar type="definition">
         ClassSetOperand ::
-          ClassCharacter
+          ClassSetCharacter
           ClassStringDisjunction
           NestedClass
 
@@ -34587,9 +34587,9 @@ THH:mm:ss.sss
           NonEmptyClassString
 
         NonEmptyClassString ::
-          ClassCharacter NonEmptyClassString?
+          ClassSetCharacter NonEmptyClassString?
 
-        ClassCharacter ::
+        ClassSetCharacter ::
           [lookahead &notin; ClassReservedDouble] SourceCharacter but not ClassSyntaxCharacter
           `\` CharacterEscape[+UnicodeMode]
           `\` ClassAllowEscaped
@@ -34845,10 +34845,10 @@ THH:mm:ss.sss
             It is a Syntax Error if MayContainStrings of the |ClassContents| is *true*.
           </li>
         </ul>
-        <emu-grammar>ClassSetRange :: ClassCharacter `-` ClassCharacter</emu-grammar>
+        <emu-grammar>ClassSetRange :: ClassSetCharacter `-` ClassSetCharacter</emu-grammar>
         <ul>
           <li>
-            It is a Syntax Error if the CharacterValue of the first |ClassCharacter| is larger than the CharacterValue of the second |ClassCharacter|.
+            It is a Syntax Error if the CharacterValue of the first |ClassSetCharacter| is larger than the CharacterValue of the second |ClassSetCharacter|.
           </li>
         </ul>
       </emu-clause>
@@ -35089,17 +35089,17 @@ THH:mm:ss.sss
           1. Let _ch_ be the code point matched by |IdentityEscape|.
           1. Return the code point value of _ch_.
         </emu-alg>
-        <emu-grammar>ClassCharacter :: SourceCharacter but not ClassSyntaxCharacter</emu-grammar>
+        <emu-grammar>ClassSetCharacter :: SourceCharacter but not ClassSyntaxCharacter</emu-grammar>
         <emu-alg>
           1. Let _ch_ be the code point matched by |SourceCharacter|.
           1. Return the code point value of _ch_.
         </emu-alg>
-        <emu-grammar>ClassCharacter :: `\` ClassAllowEscaped</emu-grammar>
+        <emu-grammar>ClassSetCharacter :: `\` ClassAllowEscaped</emu-grammar>
         <emu-alg>
           1. Let _ch_ be the code point matched by |ClassAllowEscaped|.
           1. Return the code point value of _ch_.
         </emu-alg>
-        <emu-grammar>ClassCharacter :: `\` `b`</emu-grammar>
+        <emu-grammar>ClassSetCharacter :: `\` `b`</emu-grammar>
         <emu-alg>
           1. Return the code point value of U+0008 (BACKSPACE).
         </emu-alg>
@@ -35149,12 +35149,11 @@ THH:mm:ss.sss
             NonemptyClassRanges[?UnicodeMode]
 
           ClassSetOperand ::
-            ClassCharacter
+            ClassSetCharacter
+
+          ClassSetOperand ::
+            ClassSetCharacter
         </emu-grammar>
-        <emu-alg>
-          1. Return *false*.
-        </emu-alg>
-        <emu-grammar>CharacterClassEscape :: `p{` UnicodePropertyValueExpression `}`</emu-grammar>
         <emu-alg>
           1. Return MayContainStrings of the |UnicodePropertyValueExpression|.
         </emu-alg>
@@ -35250,7 +35249,7 @@ THH:mm:ss.sss
         <emu-alg>
           1. Return MayContainStrings of the |NonEmptyClassString|.
         </emu-alg>
-        <emu-grammar>NonEmptyClassString :: ClassCharacter NonEmptyClassString?</emu-grammar>
+        <emu-grammar>NonEmptyClassString :: ClassSetCharacter NonEmptyClassString?</emu-grammar>
         <emu-alg>
           1. If |NonEmptyClassString| is present, return *true*.
           1. Return *false*.
@@ -36266,10 +36265,10 @@ THH:mm:ss.sss
         </emu-alg>
 
         <!-- ClassSetRange -->
-        <emu-grammar>ClassSetRange :: ClassCharacter `-` ClassCharacter</emu-grammar>
+        <emu-grammar>ClassSetRange :: ClassSetCharacter `-` ClassSetCharacter</emu-grammar>
         <emu-alg>
-          1. Let _A_ be CompileToCharSet of the first |ClassCharacter|.
-          1. Let _B_ be CompileToCharSet of the second |ClassCharacter|.
+          1. Let _A_ be CompileToCharSet of the first |ClassSetCharacter|.
+          1. Let _B_ be CompileToCharSet of the second |ClassSetCharacter|.
           1. Return ! MaybeSimpleCaseFolding(! CharacterRange(_A_, _B_)).
         </emu-alg>
         <emu-note>
@@ -36277,9 +36276,9 @@ THH:mm:ss.sss
         </emu-note>
 
         <!-- ClassSetOperand -->
-        <emu-grammar>ClassSetOperand :: ClassCharacter</emu-grammar>
+        <emu-grammar>ClassSetOperand :: ClassSetCharacter</emu-grammar>
         <emu-alg>
-          1. Let _A_ be CompileToCharSet of |ClassCharacter|.
+          1. Let _A_ be CompileToCharSet of |ClassSetCharacter|.
           1. Return ! MaybeSimpleCaseFolding(_A_).
         </emu-alg>
         <emu-grammar>ClassSetOperand :: ClassStringDisjunction</emu-grammar>
@@ -36329,19 +36328,19 @@ THH:mm:ss.sss
           1. Return _A_.
         </emu-alg>
 
-        <!-- ClassCharacter -->
+        <!-- ClassSetCharacter -->
         <emu-grammar>
-          ClassCharacter ::
+          ClassSetCharacter ::
             SourceCharacter but not ClassSyntaxCharacter
             `\` CharacterEscape
             `\` ClassAllowEscaped
         </emu-grammar>
         <emu-alg>
-          1. Let _cv_ be the CharacterValue of this |ClassCharacter|.
+          1. Let _cv_ be the CharacterValue of this |ClassSetCharacter|.
           1. Let _c_ be the character whose character value is _cv_.
           1. Return the CharSet containing the single character _c_.
         </emu-alg>
-        <emu-grammar>ClassCharacter :: `\` `b`</emu-grammar>
+        <emu-grammar>ClassSetCharacter :: `\` `b`</emu-grammar>
         <emu-alg>
           1. Return the CharSet containing the single character U+0008 (BACKSPACE).
         </emu-alg>
@@ -36471,15 +36470,13 @@ THH:mm:ss.sss
         <emu-alg>
           1. Return CompileClassSetString of |NonEmptyClassString|.
         </emu-alg>
-        <emu-grammar>NonEmptyClassString :: ClassCharacter NonEmptyClassString?</emu-grammar>
+        <emu-grammar>NonEmptyClassString :: ClassSetCharacter NonEmptyClassString?</emu-grammar>
         <emu-alg>
-          1. Let _cs_ be CompileToCharSet of |ClassCharacter|.
+          1. Let _cs_ be CompileToCharSet of |ClassSetCharacter|.
           1. Let _s1_ be the sequence of characters that is the single element of _cs_.
-          1. If |NonEmptyClassString| is present, then
-            1. Let _s2_ be CompileClassSetString of |NonEmptyClassString|.
+          1. Let _cs_ be CompileToCharSet of |ClassSetCharacter|.
             1. Return the concatenation of _s1_ and _s2_.
           1. Return _s1_.
-        </emu-alg>
       </emu-clause>
     </emu-clause>
 
