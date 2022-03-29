@@ -34552,7 +34552,7 @@ THH:mm:ss.sss
           ClassSetOperand `--` ClassSetOperand
           ClassSubtraction `--` ClassSetOperand
 
-        ClassRange ::
+        ClassSetRange ::
           ClassCharacter `-` ClassCharacter
       </emu-grammar>
       <ul>
@@ -34845,7 +34845,7 @@ THH:mm:ss.sss
             It is a Syntax Error if MayContainStrings of the |ClassContents| is *true*.
           </li>
         </ul>
-        <emu-grammar>ClassRange :: ClassCharacter `-` ClassCharacter</emu-grammar>
+        <emu-grammar>ClassSetRange :: ClassCharacter `-` ClassCharacter</emu-grammar>
         <ul>
           <li>
             It is a Syntax Error if the CharacterValue of the first |ClassCharacter| is larger than the CharacterValue of the second |ClassCharacter|.
@@ -35183,7 +35183,7 @@ THH:mm:ss.sss
         <emu-alg>
           1. Return MayContainStrings of the |ClassSubtraction|.
         </emu-alg>
-        <emu-grammar>ClassUnion :: ClassRange ClassUnion?</emu-grammar>
+        <emu-grammar>ClassUnion :: ClassSetRange ClassUnion?</emu-grammar>
         <emu-alg>
           1. If the |ClassUnion| is present, return MayContainStrings of the |ClassUnion|.
           1. Return *false*.
@@ -36220,9 +36220,9 @@ THH:mm:ss.sss
         </emu-alg>
 
         <!-- ClassUnion -->
-        <emu-grammar>ClassUnion :: ClassRange ClassUnion?</emu-grammar>
+        <emu-grammar>ClassUnion :: ClassSetRange ClassUnion?</emu-grammar>
         <emu-alg>
-          1. Let _A_ be CompileToCharSet of |ClassRange|.
+          1. Let _A_ be CompileToCharSet of |ClassSetRange|.
           1. If |ClassUnion| is present, then
             1. Let _B_ be CompileToCharSet of |ClassUnion|.
             1. Return the union of CharSets _A_ and _B_.
@@ -36265,8 +36265,8 @@ THH:mm:ss.sss
           1. Return the CharSet consisting of the elements of _A_ which are not also elements of _B_.
         </emu-alg>
 
-        <!-- ClassRange -->
-        <emu-grammar>ClassRange :: ClassCharacter `-` ClassCharacter</emu-grammar>
+        <!-- ClassSetRange -->
+        <emu-grammar>ClassSetRange :: ClassCharacter `-` ClassCharacter</emu-grammar>
         <emu-alg>
           1. Let _A_ be CompileToCharSet of the first |ClassCharacter|.
           1. Let _B_ be CompileToCharSet of the second |ClassCharacter|.
