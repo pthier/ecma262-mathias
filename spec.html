@@ -34577,10 +34577,11 @@ THH:mm:ss.sss
       </emu-note>
       <emu-grammar type="definition">
         ClassStringDisjunction ::
-          `\q{` ClassString MoreClassStrings? `}`
+          `\q{` ClassStringDisjunctionContents `}`
 
-        MoreClassStrings ::
-          `|` ClassString MoreClassStrings?
+        ClassStringDisjunctionContents ::
+          ClassString
+          ClassString `|` ClassStringDisjunctionContents
 
         ClassString ::
           [empty]
@@ -35230,17 +35231,18 @@ THH:mm:ss.sss
         <emu-alg>
           1. Return MayContainStrings of the |CharacterClassEscape|.
         </emu-alg>
-        <emu-grammar>ClassStringDisjunction :: `\q{` ClassString MoreClassStrings? `}`</emu-grammar>
+        <emu-grammar>ClassStringDisjunction :: `\q{` ClassStringDisjunctionContents `}`</emu-grammar>
         <emu-alg>
-          1. If MayContainStrings of the |ClassString| is *true*, return *true*.
-          1. If |MoreClassStrings| is present, return MayContainStrings of the |MoreClassStrings|.
-          1. Return *false*.
+          1. Return MayContainStrings of the |ClassStringDisjunctionContents|.
         </emu-alg>
-        <emu-grammar>MoreClassStrings :: `|` ClassString MoreClassStrings?</emu-grammar>
+        <emu-grammar>ClassStringDisjunctionContents :: ClassString</emu-grammar>
+        <emu-alg>
+          1. Return MayContainStrings of the |ClassString|.
+        </emu-alg>
+        <emu-grammar>ClassStringDisjunctionContents :: ClassString `|` ClassStringDisjunctionContents</emu-grammar>
         <emu-alg>
           1. If MayContainStrings of the |ClassString| is *true*, return *true*.
-          1. If |MoreClassStrings| is present, return MayContainStrings of the |MoreClassStrings|.
-          1. Return *false*.
+          1. Return MayContainStrings of the |ClassStringDisjunctionContents|.
         </emu-alg>
         <emu-grammar>ClassString :: [empty]</emu-grammar>
         <emu-alg>
@@ -36307,25 +36309,22 @@ THH:mm:ss.sss
         </emu-alg>
 
         <!-- ClassStringDisjunction -->
-        <emu-grammar>ClassStringDisjunction :: `\q{` ClassString MoreClassStrings? `}`</emu-grammar>
+        <emu-grammar>ClassStringDisjunction :: `\q{` ClassStringDisjunctionContents `}`</emu-grammar>
         <emu-alg>
-          1. Let _s_ be CompileClassSetString of |ClassString|.
-          1. Let _A_ be the CharSet whose sole element is the sequence of characters _s_.
-          1. If |MoreClassStrings| is present, then
-            1. Let _B_ be CompileToCharSet of |MoreClassStrings|.
-            1. Return the union of CharSets _A_ and _B_.
-          1. Return _A_.
+          1. Return CompileToCharSet of |ClassStringDisjunctionContents|.
         </emu-alg>
 
-        <!-- MoreClassStrings -->
-        <emu-grammar>MoreClassStrings :: `|` ClassString MoreClassStrings?</emu-grammar>
+        <!-- ClassStringDisjunctionContents -->
+        <emu-grammar>ClassStringDisjunctionContents :: ClassString</emu-grammar>
+        <emu-alg>
+          1. Return CompileToCharSet of |ClassString|.
+        </emu-alg>
+        <emu-grammar>ClassStringDisjunctionContents :: ClassString `|` ClassStringDisjunctionContents</emu-grammar>
         <emu-alg>
           1. Let _s_ be CompileClassSetString of |ClassString|.
           1. Let _A_ be the CharSet containing the one string _s_.
-          1. If |MoreClassStrings| is present, then
-            1. Let _B_ be CompileToCharSet of |MoreClassStrings|.
-            1. Return the union of CharSets _A_ and _B_.
-          1. Return _A_.
+          1. Let _B_ be CompileToCharSet of |ClassStringDisjunctionContents|.
+          1. Return the union of CharSets _A_ and _B_.
         </emu-alg>
 
         <!-- ClassSetCharacter -->
@@ -36377,13 +36376,13 @@ THH:mm:ss.sss
           </dl>
           <emu-alg>
             1. If _UnicodeSets_ is *false* or _IgnoreCase_ is *false*, return _A_.
-            1. Let _S_ be an empty CharSet.
-            1. For each CharSetElement _cs_ of _A_, do
+            1. Let _B_ be an empty CharSet.
+            1. For each CharSetElement _s_ of _A_, do
               1. Let _t_ be an empty sequence of characters.
-              1. For each single code point _c_ in _cs_, do
-                1. Append scf(_c_) to _t_.
-              1. Set _S_ to the union of _S_ and _t_.
-            1. Return _S_.
+              1. For each single code point _cp_ in _s_, do
+                1. Append scf(_cp_) to _t_.
+              1. Set _B_ to the union of _B_ and _t_.
+            1. Return _B_.
           </emu-alg>
         </emu-clause>
 
