@@ -36317,7 +36317,8 @@ THH:mm:ss.sss
         <!-- ClassStringDisjunctionContents -->
         <emu-grammar>ClassStringDisjunctionContents :: ClassString</emu-grammar>
         <emu-alg>
-          1. Return CompileToCharSet of |ClassString|.
+          1. Let _s_ be CompileClassSetString of |ClassString|.
+          1. Return the CharSet containing the one string _s_.
         </emu-alg>
         <emu-grammar>ClassStringDisjunctionContents :: ClassString `|` ClassStringDisjunctionContents</emu-grammar>
         <emu-alg>
